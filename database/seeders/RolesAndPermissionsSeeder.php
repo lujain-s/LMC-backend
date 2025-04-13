@@ -25,7 +25,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'showUserInfo',
             'registerGuest',
             'LoginSuperAdmin',
-
+            'addFlashcard',
+            'enrollStudent',
+            'addCourse',
+            'editCourse',
+            'viewEnrolledStudentsInCourse',
+            'getAllEnrolledStudents',
         ];
 
         // Create all permissions
@@ -43,13 +48,17 @@ class RolesAndPermissionsSeeder extends Seeder
                'registerGuest',
                 'login',
                 'logout',
-
-
+                'enrollStudent',
+                'addCourse',
+                'editCourse',
+                'viewEnrolledStudentsInCourse',
+                'getAllEnrolledStudents',
             ],
             'Teacher' => [
                 'registerGuest',
                 'login',
                 'logout',
+                'addFlashcard',
             ],
             'Logistic' => [
                 'registerGuest',
