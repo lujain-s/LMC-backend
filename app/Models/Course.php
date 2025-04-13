@@ -42,7 +42,7 @@ class Course extends Model
     }
 
     public function CourseSchedule(){
-        return $this->hasMany(CourseSchedule::class, 'CourseScheduleId');
+        return $this->hasMany(CourseSchedule::class, 'CourseId');
     }
 
     public function Attendance(){

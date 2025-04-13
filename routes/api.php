@@ -19,6 +19,8 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
 
 Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->group(function () {
     Route::post('addFlashcard', [StaffController::class, 'addFlashCard']);
+
+    Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
 });
 
 Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretarya')->group(function () {
