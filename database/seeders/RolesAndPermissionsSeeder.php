@@ -56,6 +56,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'deleteCourse',
                 'viewEnrolledStudentsInCourse',
                 'getAllEnrolledStudents',
+                'reviewMyCourses',
             ],
             'Teacher' => [
                 'registerGuest',
