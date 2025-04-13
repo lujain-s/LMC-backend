@@ -32,6 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'deleteCourse',
             'viewEnrolledStudentsInCourse',
             'getAllEnrolledStudents',
+            'reviewMyCourses',
         ];
 
         // Create all permissions
@@ -61,6 +62,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'login',
                 'logout',
                 'addFlashcard',
+                'reviewMyCourses',
             ],
             'Logistic' => [
                 'registerGuest',
