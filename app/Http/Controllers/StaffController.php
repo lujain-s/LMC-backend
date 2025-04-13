@@ -129,6 +129,20 @@ class StaffController extends Controller
         );
     }
 
+    public function deleteCourse($courseId)
+    {
+        $course = Course::find($courseId);
+
+        if (!$course) {
+            return response()->json(['error' => 'Course not found'], 404);
+        }
+
+        return response()->json(
+            $this->staffService->deleteCourseWithLessons($course)
+        );
+    }
+
+
     public function reviewRoomReservations (Request $request) {
 
     }

@@ -18,7 +18,7 @@ class Course extends Model
     ];
 
     public function User(){
-        return $this->belongsTo(User::class, 'UserId');
+        return $this->belongsTo(User::class, 'TeacherId');
     }
 
     public function Language(){
@@ -30,7 +30,7 @@ class Course extends Model
     }
 
     public function Lesson(){
-        return $this->hasMany(Lesson::class, 'LessonId');
+        return $this->hasMany(Lesson::class, 'CourseId');
     }
 
     public function FlashCard(){

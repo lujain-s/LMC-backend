@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Course;
 use App\Repositories\StaffRepository;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -170,6 +171,15 @@ class StaffService
                 'UpdatedSchedule' => true,
                 'Lessons' => $lessons,
             ];
+        });
+    }
+
+    //Delete course
+    public function deleteCourseWithLessons($course)
+    {
+        return DB::transaction(function () use ($course) {
+            $this->staffRepository->deleteCourseAndLessons($course);
+            return ['message' => 'Course and its lessons deleted successfully.'];
         });
     }
 

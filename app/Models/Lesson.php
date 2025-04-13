@@ -9,7 +9,13 @@ class Lesson extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        "CourseId",
+        "Title",
+        "Date",
+        "Start_Time",
+        "End_Time",
+    ];
 
     public function Course(){
         return $this->belongsTo(Course::class, 'CourseId');

@@ -29,6 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'enrollStudent',
             'addCourse',
             'editCourse',
+            'deleteCourse',
             'viewEnrolledStudentsInCourse',
             'getAllEnrolledStudents',
         ];
@@ -51,6 +52,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'enrollStudent',
                 'addCourse',
                 'editCourse',
+                'deleteCourse',
                 'viewEnrolledStudentsInCourse',
                 'getAllEnrolledStudents',
             ],

@@ -145,9 +145,23 @@ class StaffRepository
             ->exists();
     }
 
+    //Delete course
+    public function deleteCourseAndLessons($course)
+    {
+        DB::table('flash_cards')->where('CourseId', $course->id)->delete();
+        DB::table('enrollments')->where('CourseId', $course->id)->delete();
+
+        Lesson::where('CourseId', $course->id)->delete();
+
+        DB::table('courseschedules')->where('CourseId', $course->id)->delete();
+        
+        $course->delete();
+    }
+
     //Teacher-------------------------------------------------------
 
     //Add flash cards to course or lesson
+
     public function createFlashCard($data)
     {
         $lesson = Lesson::findOrFail($data['LessonId']);
