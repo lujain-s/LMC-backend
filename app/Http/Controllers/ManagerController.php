@@ -6,10 +6,6 @@ use Illuminate\Http\Request;
 
 class ManagerController extends Controller
 {
-    public function addEmployee(Request $request) {
-
-    }
-
     public function editEmployee(Request $request) {
 
     }
@@ -67,6 +63,6 @@ class ManagerController extends Controller
     }
 
     public function viewInvoices() {
-        
+
     }
 }

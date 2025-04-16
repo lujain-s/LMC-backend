@@ -9,10 +9,14 @@ class Complaint extends Model
 {
     use HasFactory;
 
-    protected $fillable = [] ;
+    protected $fillable = [
+        "TeacherId",
+        "Subject",
+        "Status",
+    ];
 
     public function User(){
-        return $this->belongsTo(User::class, 'UserId');
+        return $this->belongsTo(User::class, 'TeacherId');
     }
 
     public function Task(){

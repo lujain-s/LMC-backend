@@ -33,6 +33,18 @@ class RolesAndPermissionsSeeder extends Seeder
             'viewEnrolledStudentsInCourse',
             'getAllEnrolledStudents',
             'reviewMyCourses',
+            'submitComplaint',
+            'editComplaint',
+            'showSolvedComplaintsTeacher',
+            'showPendingComplaintsTeacher',
+            'showComplaintTeacher',
+            'deleteComplaint',
+            'checkComplaint',
+            'showSolvedComplaints',
+            'showPendingComplaints',
+            'showAllComplaint',
+            'showTeacherComplaints',
+            'showComplaint',
         ];
 
         // Create all permissions
@@ -64,6 +76,11 @@ class RolesAndPermissionsSeeder extends Seeder
                 'logout',
                 'addFlashcard',
                 'reviewMyCourses',
+                'submitComplaint',
+                'editComplaint',
+                'showSolvedComplaintsTeacher',
+                'showPendingComplaintsTeacher',
+                'showComplaintTeacher','deleteComplaint',
             ],
             'Logistic' => [
                 'registerGuest',

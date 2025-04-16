@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Enrollment;
-use App\Models\FlashCard;
-use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\StaffService;
@@ -151,6 +149,14 @@ class StaffController extends Controller
 
     }
 
+    public function editAnnouncement (Request $request) {
+
+    }
+
+    public function deleteAnnouncement (Request $request) {
+
+    }
+
     public function viewInvoices () {
 
     }
@@ -186,6 +192,26 @@ class StaffController extends Controller
 
     }
 
+    public function editTest(Request $request) {
+
+    }
+
+    public function deleteTest(Request $request) {
+
+    }
+
+    public function addSelfTest(Request $request) {
+
+    }
+
+    public function editSelfTest(Request $request) {
+
+    }
+
+    public function deleteSelfTest(Request $request) {
+
+    }
+
     public function checkAttendance() {
 
     }
@@ -197,17 +223,6 @@ class StaffController extends Controller
             'Translation' => 'required|string',
         ]);
 
-        /*$teacherId = auth()->user()->id;
-
-        $lesson = Lesson::find($data['LessonId']);
-
-        //check if the teacher is associated with this lesson/course
-        if ($lesson->teacher_id !== $teacherId) {
-            return response()->json([
-                'Message' => 'You can not add flashcards to this lesson.'
-            ]);
-        }*/
-
         $flashcard = $this->staffService->addFlashCard($data);
 
         return response()->json([
@@ -217,6 +232,10 @@ class StaffController extends Controller
     }
 
     public function editFlashCard(Request $request) {
+
+    }
+
+    public function deleteFlashCard(Request $request) {
 
     }
 

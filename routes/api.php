@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ComplaintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\StaffController;
@@ -15,6 +16,18 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
     Route::post('register', [AuthController::class, 'register']);
 
     Route::get('showUserInfo/{id}', [AuthController::class, 'showUserInfo']);
+
+    Route::get('showComplaint/{id}', [ComplaintController::class, 'showComplaint']);
+
+    Route::get('showAllComplaint', [ComplaintController::class, 'showAllComplaint']);
+
+    Route::get('showTeacherComplaints/{teacherId}', [ComplaintController::class, 'showTeacherComplaints']);
+
+    Route::get('showPendingComplaints', [ComplaintController::class, 'showPendingComplaints']);
+
+    Route::get('showSolvedComplaints', [ComplaintController::class, 'showSolvedComplaints']);
+
+    Route::post('checkComplaint/{complaintId}', [ComplaintController::class, 'checkComplaint']);
 });
 
 
@@ -22,6 +35,18 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
     Route::post('addFlashcard', [StaffController::class, 'addFlashCard']);
 
     Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
+
+    Route::post('submitComplaint', [ComplaintController::class, 'submitComplaint']);
+
+    Route::post('editComplaint/{complaint}', [ComplaintController::class, 'editComplaint']);
+
+    Route::get('deleteComplaint/{id}', [ComplaintController::class, 'deleteComplaint']);
+
+    Route::get('showTeacherOwnComplaints', [ComplaintController::class, 'showTeacherOwnComplaints']);
+
+    Route::get('showPendingComplaintsTeacher', [ComplaintController::class, 'showPendingComplaintsTeacher']);
+
+     Route::get('showSolvedComplaintsTeacher', [ComplaintController::class, 'showSolvedComplaintsTeacher']);
 });
 
 Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretarya')->group(function () {
