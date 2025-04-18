@@ -182,10 +182,4 @@ class StaffRepository
         ]);
     }
 
-    //Review my schedule
-    public function getCoursesSchedules($teacherId)
-    {
-        return Course::where('TeacherId', $teacherId)->with('CourseSchedule')->get();
-    }
-
 }

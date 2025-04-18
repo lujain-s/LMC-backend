@@ -196,12 +196,6 @@ class StaffService
         });
     }
 
-    //Review my schedule
-    public function reviewSchedule($teacherId)
-    {
-        return $this->staffRepository->getCoursesSchedules($teacherId);
-    }
-
     //Check attendance, enter bonus
     public function enterBonus($courseId, $studentId, $bonus)
     {

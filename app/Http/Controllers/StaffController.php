@@ -175,14 +175,9 @@ class StaffController extends Controller
         ]);
     }
 
-    public function reviewSchedule() {
-        $teacherId = auth()->user()->id;
-        $schedules = $this->staffService->reviewSchedule($teacherId);
+    /*public function reviewSchedule() {
 
-        return response()->json([
-            'My Course Schedules' => $schedules
-        ]);
-    }
+    }*/
 
     public function reviewStudentsNames($courseId) {
         $teacherId = auth()->user()->id;
