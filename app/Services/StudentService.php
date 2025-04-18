@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Enrollment;
 use App\Models\Lesson;
+use App\Models\Notes;
 use App\Models\User;
 use App\Repositories\StudentRepository;
 
@@ -38,6 +39,35 @@ class StudentService
     //View teachers
     public function getAllTeachers() {
         return User::role('Teacher')->select('id', 'name', 'email')->get();
+    }
+
+    //Note
+    public function addNote($data) {
+        return $this->studentRepository->createNote($data);
+    }
+
+    public function editNote($studentId, $noteId, $content) {
+        $note = Notes::find($noteId);
+
+        if (!$note || $note->StudentId !== $studentId) {
+            return ['error' => 'Note not found.'];
+        }
+
+        return $this->studentRepository->updateNote($note, $content);
+    }
+
+    public function deleteNote($studentId, $noteId) {
+        $note = Notes::find($noteId);
+
+        if (!$note || $note->StudentId !== $studentId) {
+            return ['error' => 'Note not found or unauthorized.'];
+        }
+
+        return $this->studentRepository->deleteNote($note);
+    }
+
+    public function getMyNotes($studentId) {
+        return Notes::where('StudentId', $studentId)->latest()->get();
     }
 
 }

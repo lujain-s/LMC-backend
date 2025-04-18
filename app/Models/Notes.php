@@ -9,9 +9,12 @@ class Notes extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'StudentId',
+        'Content',
+    ];
 
     public function User(){
-        return $this->hasOne(User::class, 'UserId');
+        return $this->hasOne(User::class, 'StudentId');
     }
 }

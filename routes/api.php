@@ -86,11 +86,18 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
     Route::get("viewMyLessons/{course}", [StudentController::class,"viewMyLessons"]);
 
     Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
+
+    Route::post("addNote", [StudentController::class,"addNote"]);
+
+    Route::post("editNote/{noteId}", [StudentController::class,"editNote"]);
+
+    Route::get("deleteNote/{noteId}", [StudentController::class,"deleteNote"]);
+
+    Route::get("viewMyNotes", [StudentController::class,"viewMyNotes"]);
 });
 
 // Authenticated routes (all logged-in users)
 Route::middleware(['auth:api'])->group(function () {
     // Logout for all authenticated users
     Route::post('logout', [AuthController::class, 'logout']);
-
 });
