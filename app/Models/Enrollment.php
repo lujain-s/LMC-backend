@@ -20,7 +20,7 @@ class Enrollment extends Model
     }
 
     public function User(){
-        return $this->belongsTo(User::class, 'UserId');
+        return $this->belongsTo(User::class, 'StudentId');
     }
     public function Certificate(){
         return $this->hasMany(Certificate::class, 'CertificateId');

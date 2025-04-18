@@ -36,7 +36,9 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
 
-    Route::post('submitComplaint', [ComplaintController::class, 'submitComplaint']);
+    Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
+
+    Route::get('reviewStudentsNames/{courseId}', [StaffController::class, 'reviewStudentsNames']);
 
     Route::post('editComplaint/{complaint}', [ComplaintController::class, 'editComplaint']);
 
@@ -46,7 +48,9 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::get('showPendingComplaintsTeacher', [ComplaintController::class, 'showPendingComplaintsTeacher']);
 
-     Route::get('showSolvedComplaintsTeacher', [ComplaintController::class, 'showSolvedComplaintsTeacher']);
+    Route::get('showSolvedComplaintsTeacher', [ComplaintController::class, 'showSolvedComplaintsTeacher']);
+
+    Route::post('submitComplaint', [ComplaintController::class, 'submitComplaint']);
 });
 
 Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretarya')->group(function () {

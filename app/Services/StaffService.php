@@ -193,5 +193,11 @@ class StaffService
         });
     }
 
+    //Review my schedule
+    public function reviewSchedule($teacherId)
+    {
+        return $this->staffRepository->getCoursesSchedules($teacherId);
+    }
+
 }
 

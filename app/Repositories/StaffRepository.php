@@ -154,7 +154,7 @@ class StaffRepository
         Lesson::where('CourseId', $course->id)->delete();
 
         DB::table('courseschedules')->where('CourseId', $course->id)->delete();
-        
+
         $course->delete();
     }
 
@@ -173,6 +173,12 @@ class StaffRepository
             'Content' => $data['Content'],
             'Translation' => $data['Translation'],
         ]);
+    }
+
+    //Review my schedule
+    public function getCoursesSchedules($teacherId)
+    {
+        return Course::where('TeacherId', $teacherId)->with('CourseSchedule')->get();
     }
 
 }

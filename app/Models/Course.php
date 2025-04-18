@@ -50,6 +50,6 @@ class Course extends Model
     }
 
     public function Enrollment(){
-        return $this->hasMany(Enrollment::class, 'EnrollmentId');
+        return $this->hasMany(Enrollment::class, 'CourseId');
     }
 }

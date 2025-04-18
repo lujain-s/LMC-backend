@@ -8,7 +8,6 @@ class CourseService
 {
     protected $courseRepository;
 
-    // 🧠 Business logic methods here
     public function addLesson($courseId, array $data)
     {
         $data['Title'] = $data['Title'] ?? 'Lesson on ' . $data['date'];

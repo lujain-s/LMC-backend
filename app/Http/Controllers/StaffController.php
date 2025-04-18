@@ -177,11 +177,32 @@ class StaffController extends Controller
     }
 
     public function reviewSchedule() {
+        $teacherId = auth()->user()->id;
+        $schedules = $this->staffService->reviewSchedule($teacherId);
 
+        return response()->json([
+            'My Course Schedules' => $schedules
+        ]);
     }
 
-    public function reviewStudentsNames() {
+    public function reviewStudentsNames($courseId) {
+        $teacherId = auth()->user()->id;
 
+        $course = Course::where('id', $courseId)->where('TeacherId', $teacherId)->first();
+
+        if (!$course) {
+            return response()->json(['message' => 'Course not found or not assigned to you'], 404);
+        }
+
+        $enrollments = $course->Enrollment()->with('User')->get();
+
+        $studentNames = $enrollments->map(function ($enrollment) {
+            return $enrollment->User->name ?? null;
+        })->filter();
+
+        return response()->json([
+            'Students' => $studentNames->values()
+        ]);
     }
 
     public function enterMark(Request $request) {
