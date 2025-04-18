@@ -40,7 +40,7 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
 
-    //Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
+    Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
 
     Route::get('reviewStudentsNames/{courseId}', [StaffController::class, 'reviewStudentsNames']);
 

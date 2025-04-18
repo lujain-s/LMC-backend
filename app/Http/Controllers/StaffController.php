@@ -175,9 +175,12 @@ class StaffController extends Controller
         ]);
     }
 
-    /*public function reviewSchedule() {
+    public function reviewSchedule() {
 
-    }*/
+        $result = $this->staffService->getTodaysSchedule();
+
+        return response()->json($result);
+    }
 
     public function reviewStudentsNames($courseId) {
         $teacherId = auth()->user()->id;
@@ -239,16 +242,51 @@ class StaffController extends Controller
         return response()->json(['message' => $result['success']]);
     }
 
+    /*
     public function addTest(Request $request) {
+        $data = $request->validate([
+            'CourseId' => 'required|exists:courses,id',
+            'Title' => 'required|string',
+            'Duration' => 'required|numeric|min:1',
+            'Mark' => 'required|numeric|min:0',
+        ]);
 
+        $data['TeacherId'] = auth()->user()->id;
+
+        $test = $this->staffService->addTest($data);
+
+        return response()->json([
+            'message' => 'Test created successfully.',
+            'Test' => $test,
+        ]);
     }
 
     public function editTest(Request $request) {
+        $data = $request->validate([
+            'TestId' => 'required|exists:tests,id',
+            'Title' => 'required|string',
+            'Duration' => 'required|numeric|min:1',
+            'Mark' => 'required|numeric|min:0',
+        ]);
 
+        $test = $this->staffService->editTest($data);
+
+        return response()->json([
+            'message' => 'Test updated successfully.',
+            'Test' => $test,
+        ]);
     }
 
     public function deleteTest(Request $request) {
+        $data = $request->validate([
+            'TestId' => 'required|exists:tests,id',
+        ]);
 
+        $this->staffService->deleteTest($data['TestId']);
+
+        return response()->json([
+            'message' => 'Test deleted successfully.',
+        ]);
     }
 
     public function addSelfTest(Request $request) {
@@ -261,7 +299,7 @@ class StaffController extends Controller
 
     public function deleteSelfTest(Request $request) {
 
-    }
+    }*/
 
     public function addFlashCard(Request $request) {
         $data = $request->validate([

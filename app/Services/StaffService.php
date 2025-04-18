@@ -187,8 +187,26 @@ class StaffService
 
     //Teacher---------------------------------------------------------
 
-    //Flash card
+    //Review schedule for today
 
+    public function getTodaysSchedule()
+    {
+        $teacherId = auth()->user()->id;
+        $today = now()->toDateString();
+
+        $lessons = $this->staffRepository->getScheduleByDay($teacherId, $today);
+
+        if ($lessons->isEmpty()) {
+            return ['message' => 'You do not have any lessons today.'];
+        }
+
+        return [
+            'message' => 'You have lessons scheduled today.',
+            'Lessons' => $lessons
+        ];
+    }
+
+    //Flash card
     public function addFlashCard($data)
     {
         return DB::transaction(function () use ($data) {
@@ -264,6 +282,29 @@ class StaffService
 
         return ['success' => 'Attendance record created'];
     }
+
+    //Add,edit,delete Test
+    /*
+    public function addTest($data)
+    {
+        return DB::transaction(function () use ($data) {
+            return $this->staffRepository->createTest($data);
+        });
+    }
+
+    public function editTest($data)
+    {
+        return DB::transaction(function () use ($data) {
+            return $this->staffRepository->updateTest($data);
+        });
+    }
+
+    public function deleteTest($testId)
+    {
+        return DB::transaction(function () use ($testId) {
+            return $this->staffRepository->deleteTest($testId);
+        });
+    }*/
 
 }
 
