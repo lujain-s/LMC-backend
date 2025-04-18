@@ -51,6 +51,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'reviewStudentsNames',
             'enterBonus',
             'markAttendance',
+            'viewEnrolledCourses',
+            'viewMyLessons',
+            'viewTeachers',
         ];
 
         // Create all permissions
@@ -103,6 +106,9 @@ class RolesAndPermissionsSeeder extends Seeder
               'registerGuest',
               'login',
               'logout',
+              'viewEnrolledCourses',
+              'viewMyLessons',
+              'viewTeachers',
             ],
             'Guest' => [
                 'registerGuest',

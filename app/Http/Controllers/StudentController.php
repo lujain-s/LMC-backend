@@ -44,7 +44,12 @@ class StudentController extends Controller
     }
 
     public function viewTeachers() {
+        $teachers = $this->studentService->getAllTeachers();
 
+        return response()->json([
+            'message' => 'Teachers retrieved successfully.',
+            'Teachers' => $teachers,
+        ]);
     }
 
     public function takePlacementTest() {

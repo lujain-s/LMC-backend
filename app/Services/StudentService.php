@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Enrollment;
 use App\Models\Lesson;
+use App\Models\User;
 use App\Repositories\StudentRepository;
 
 class StudentService
@@ -32,6 +33,11 @@ class StudentService
         }
 
         return Lesson::where('CourseId', $courseId)->get();
+    }
+
+    //View teachers
+    public function getAllTeachers() {
+        return User::role('Teacher')->select('id', 'name', 'email')->get();
     }
 
 }

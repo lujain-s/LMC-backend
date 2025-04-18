@@ -39,6 +39,10 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::post('deleteFlashcard', [StaffController::class, 'deleteFlashCard']);
 
+    Route::post('enterBonus', [StaffController::class, 'enterBonus']);
+
+    Route::post('markAttendance', [StaffController::class, 'markAttendance']);
+
     Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
 
     Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
@@ -80,6 +84,8 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
     Route::get("viewEnrolledCourses", [StudentController::class,"viewEnrolledCourses"]);
 
     Route::get("viewMyLessons/{course}", [StudentController::class,"viewMyLessons"]);
+
+    Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
 });
 
 // Authenticated routes (all logged-in users)
