@@ -167,7 +167,7 @@ class StaffRepository
 
     //Teacher-------------------------------------------------------
 
-    //Add flash cards to course or lesson
+    //Flash cards
 
     public function createFlashCard($data)
     {
@@ -180,6 +180,25 @@ class StaffRepository
             'Content' => $data['Content'],
             'Translation' => $data['Translation'],
         ]);
+    }
+
+    public function updateFlashCard($data)
+    {
+        $flashcard = Flashcard::findOrFail($data['FlashcardId']);
+        $flashcard->update([
+            'Content' => $data['Content'],
+            'Translation' => $data['Translation'],
+        ]);
+
+        return $flashcard;
+    }
+
+    public function deleteFlashCard($flashcardId)
+    {
+        $flashcard = Flashcard::findOrFail($flashcardId);
+        $flashcard->delete();
+
+        return true;
     }
 
 }

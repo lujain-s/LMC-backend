@@ -263,7 +263,6 @@ class StaffController extends Controller
 
     }
 
-
     public function addFlashCard(Request $request) {
         $data = $request->validate([
             'LessonId' => 'required|exists:lessons,id',
@@ -280,11 +279,30 @@ class StaffController extends Controller
     }
 
     public function editFlashCard(Request $request) {
+        $data = $request->validate([
+            'FlashcardId' => 'required|exists:flash_cards,id',
+            'Content' => 'required|string',
+            'Translation' => 'required|string',
+        ]);
 
+        $flashcard = $this->staffService->editFlashCard($data);
+
+        return response()->json([
+            'message' => 'Flashcard updated successfully.',
+            'Flashcard' => $flashcard,
+        ]);
     }
 
     public function deleteFlashCard(Request $request) {
+        $data = $request->validate([
+            'FlashcardId' => 'required|exists:flash_cards,id',
+        ]);
 
+        $this->staffService->deleteFlashCard($data['FlashcardId']);
+
+        return response()->json([
+            'message' => 'Flashcard deleted successfully.',
+        ]);
     }
 
     public function requestPrivateCourse() {

@@ -34,9 +34,13 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
 Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->group(function () {
     Route::post('addFlashcard', [StaffController::class, 'addFlashCard']);
 
+    Route::post('editFlashcard', [StaffController::class, 'editFlashCard']);
+
+    Route::post('deleteFlashcard', [StaffController::class, 'deleteFlashCard']);
+
     Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
 
-    Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
+    //Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
 
     Route::get('reviewStudentsNames/{courseId}', [StaffController::class, 'reviewStudentsNames']);
 

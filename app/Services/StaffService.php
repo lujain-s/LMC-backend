@@ -187,12 +187,26 @@ class StaffService
 
     //Teacher---------------------------------------------------------
 
-    //Add flash card to lesson
+    //Flash card
 
     public function addFlashCard($data)
     {
         return DB::transaction(function () use ($data) {
             return $this->staffRepository->createFlashCard($data);
+        });
+    }
+
+    public function editFlashCard($data)
+    {
+        return DB::transaction(function () use ($data) {
+            return $this->staffRepository->updateFlashCard($data);
+        });
+    }
+
+    public function deleteFlashCard($flashcardId)
+    {
+        return DB::transaction(function () use ($flashcardId) {
+            return $this->staffRepository->deleteFlashCard($flashcardId);
         });
     }
 
