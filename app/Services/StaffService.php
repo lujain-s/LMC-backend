@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\Attendance;
 use App\Models\Course;
 use App\Repositories\StaffRepository;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Lesson;
+use App\Models\User;
 
 class StaffService
 {
@@ -20,6 +22,7 @@ class StaffService
     //Secretary--------------------------------------------------
 
     //Enrollment
+
     public function enrollStudent($data)
     {
         return DB::transaction(function () use ($data) {
@@ -46,11 +49,10 @@ class StaffService
                 $data['Number_of_lessons']
             );
 
-            // Check for schedule conflict before creating the course
             $conflict = $this->staffRepository->checkCourseScheduleConflict(
                 $data['RoomId'],
                 $data['Start_Date'],
-                $endDate,  // or however you calculate it from lessons
+                $endDate,
                 $data['CourseDays'],
                 $data['Start_Time'],
                 $data['End_Time']
@@ -186,6 +188,7 @@ class StaffService
     //Teacher---------------------------------------------------------
 
     //Add flash card to lesson
+
     public function addFlashCard($data)
     {
         return DB::transaction(function () use ($data) {
@@ -197,6 +200,61 @@ class StaffService
     public function reviewSchedule($teacherId)
     {
         return $this->staffRepository->getCoursesSchedules($teacherId);
+    }
+
+    //Check attendance, enter bonus
+    public function enterBonus($courseId, $studentId, $bonus)
+    {
+        $teacherId = auth()->user()->id;
+
+        $course = Course::where('id', $courseId)
+            ->where('TeacherId', $teacherId)
+            ->first();
+
+        if (!$course) {
+            return ['error' => 'Course not found or not assigned to you'];
+        }
+
+        $attendance = Attendance::where('CourseId', $courseId)
+            ->where('StudentId', $studentId)
+            ->first();
+
+        if (!$attendance) {
+            return ['error' => 'Attendance record not found'];
+        }
+
+        $attendance->Bonus = $bonus;
+        $attendance->save();
+
+        return ['success' => 'Bonus updated successfully'];
+    }
+
+    public function markAttendance($courseId, $studentId)
+    {
+        $teacherId = auth()->user()->id;
+
+        $course = Course::where('id', $courseId)->where('TeacherId', $teacherId)->first();
+
+        if (!$course) {
+            return ['error' => 'Course not found or not assigned to you'];
+        }
+
+        $isEnrolled = DB::table('enrollments')
+        ->where('CourseId', $courseId)
+        ->where('StudentId', $studentId)
+        ->exists();
+
+        if (!$isEnrolled) {
+            return ['error' => 'Student is not enrolled in this course'];
+        }
+
+        Attendance::create([
+            'CourseId' => $courseId,
+            'StudentId' => $studentId,
+            'Bonus' => 0,
+        ]);
+
+        return ['success' => 'Attendance record created'];
     }
 
 }

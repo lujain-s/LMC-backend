@@ -81,10 +81,9 @@ class StaffController extends Controller
             'CourseDays.*' => 'in:Sun,Mon,Tue,Wed,Thu,Fri,Sat',
         ]);
 
-        // Check if the Start_Date matches any of the CourseDays
         $startDate = Carbon::parse($data['Start_Date']);
         $courseDays = $data['CourseDays'];
-        $startDayOfWeek = $startDate->format('D'); // Get the day of the week for Start_Date
+        $startDayOfWeek = $startDate->format('D');
 
         if (!in_array($startDayOfWeek, $courseDays)) {
             return response()->json([
@@ -205,8 +204,44 @@ class StaffController extends Controller
         ]);
     }
 
-    public function enterMark(Request $request) {
+    public function enterBonus(Request $request)
+    {
+        $validated = $request->validate([
+            'CourseId' => 'required|exists:courses,id',
+            'StudentId' => 'required|exists:users,id',
+            'Bonus' => 'required|numeric|min:0',
+        ]);
 
+        $result = $this->staffService->enterBonus(
+            $validated['CourseId'],
+            $validated['StudentId'],
+            $validated['Bonus']
+        );
+
+        if (isset($result['error'])) {
+            return response()->json(['message' => $result['error']], 404);
+        }
+
+        return response()->json(['message' => $result['success']]);
+    }
+
+    public function markAttendance(Request $request)
+    {
+        $validated = $request->validate([
+            'CourseId' => 'required|exists:courses,id',
+            'StudentId' => 'required|exists:users,id',
+        ]);
+
+        $result = $this->staffService->markAttendance(
+            $validated['CourseId'],
+            $validated['StudentId']
+        );
+
+        if (isset($result['error'])) {
+            return response()->json(['message' => $result['error']], 404);
+        }
+
+        return response()->json(['message' => $result['success']]);
     }
 
     public function addTest(Request $request) {
@@ -233,9 +268,6 @@ class StaffController extends Controller
 
     }
 
-    public function checkAttendance() {
-
-    }
 
     public function addFlashCard(Request $request) {
         $data = $request->validate([
@@ -261,10 +293,6 @@ class StaffController extends Controller
     }
 
     public function requestPrivateCourse() {
-
-    }
-
-    public function submitComplaint(Request $request) {
 
     }
 }

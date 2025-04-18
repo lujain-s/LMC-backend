@@ -45,6 +45,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'showAllComplaint',
             'showTeacherComplaints',
             'showComplaint',
+            'reviewSchedule',
+            'reviewStudentsNames',
+            'enterBonus',
+            'markAttendance',
         ];
 
         // Create all permissions
@@ -68,7 +72,6 @@ class RolesAndPermissionsSeeder extends Seeder
                 'deleteCourse',
                 'viewEnrolledStudentsInCourse',
                 'getAllEnrolledStudents',
-                'reviewMyCourses',
             ],
             'Teacher' => [
                 'registerGuest',
@@ -80,7 +83,12 @@ class RolesAndPermissionsSeeder extends Seeder
                 'editComplaint',
                 'showSolvedComplaintsTeacher',
                 'showPendingComplaintsTeacher',
-                'showComplaintTeacher','deleteComplaint',
+                'showComplaintTeacher',
+                'deleteComplaint',
+                'reviewSchedule',
+                'reviewStudentsNames',
+                'enterBonus',
+                'markAttendance',
             ],
             'Logistic' => [
                 'registerGuest',

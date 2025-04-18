@@ -40,6 +40,10 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::get('reviewStudentsNames/{courseId}', [StaffController::class, 'reviewStudentsNames']);
 
+    Route::post('enterBonus', [StaffController::class, 'enterBonus']);
+
+    Route::post('markAttendance', [StaffController::class, 'markAttendance']);
+
     Route::post('editComplaint/{complaint}', [ComplaintController::class, 'editComplaint']);
 
     Route::get('deleteComplaint/{id}', [ComplaintController::class, 'deleteComplaint']);

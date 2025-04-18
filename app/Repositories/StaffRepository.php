@@ -9,6 +9,7 @@ use App\Models\FlashCard;
 use App\Models\Lesson;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class StaffRepository
 {
@@ -16,11 +17,17 @@ class StaffRepository
     //Secretary----------------------------------------------
 
     //Enrollment
+
     public function updateUserRole($studentId, $role_id)
     {
         $user = User::findOrFail($studentId);
+
         $user->role_id = $role_id;
         $user->save();
+
+        $role = Role::findById($role_id, 'api');
+        $user->syncRoles($role->name);
+
         return $user;
     }
 
