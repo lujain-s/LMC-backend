@@ -4,6 +4,7 @@ use App\Http\Controllers\ComplaintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\StudentController;
 
 // Public routes
 Route::post('LoginSuperAdmin', [AuthController::class, 'login']);
@@ -73,6 +74,12 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
     Route::get("viewEnrolledStudentsInCourse/{course}", [StaffController::class,"viewEnrolledStudentsInCourse"]);
 
     Route::get("getAllEnrolledStudents", [StaffController::class,"getAllEnrolledStudents"]);
+});
+
+Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->group(function() {
+    Route::get("viewEnrolledCourses", [StudentController::class,"viewEnrolledCourses"]);
+
+    Route::get("viewMyLessons/{course}", [StudentController::class,"viewMyLessons"]);
 });
 
 // Authenticated routes (all logged-in users)
