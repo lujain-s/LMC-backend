@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Enrollment;
 use App\Models\FlashCard;
 use App\Models\Lesson;
+use App\Models\Test;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -167,8 +168,18 @@ class StaffRepository
 
     //Teacher-------------------------------------------------------
 
-    //Flash cards
+    //Review todays schedule
 
+    public function getScheduleByDay($teacherId, $today)
+    {
+        return Lesson::whereDate('Date', $today)
+        ->whereHas('Course', function ($query) use ($teacherId) {
+            $query->where('TeacherId', $teacherId);
+        })
+        ->with('Course')->get();
+    }
+
+    //Flash cards
     public function createFlashCard($data)
     {
         $lesson = Lesson::findOrFail($data['LessonId']);
@@ -200,5 +211,40 @@ class StaffRepository
 
         return true;
     }
+
+    //Add,edit,delete Test
+    /*
+    public function createTest($data)
+    {
+        return Test::create([
+            'CourseId' => $data['CourseId'],
+            'TeacherId' => $data['TeacherId'],
+            'Title' => $data['Title'],
+            'Duration' => $data['Duration'],
+            'Mark' => $data['Mark'],
+        ]);
+    }
+
+    public function updateTest($data)
+    {
+        $test = Test::findOrFail($data['TestId']);
+
+        $test->update([
+            'Title' => $data['Title'],
+            'Duration' => $data['Duration'],
+            'Mark' => $data['Mark'],
+        ]);
+
+        return $test;
+    }
+
+    public function deleteTest($testId)
+    {
+        $test = Test::findOrFail($testId);
+        $test->delete();
+
+        return true;
+    }
+*/
 
 }
