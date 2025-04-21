@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use App\Models\Attendance;
+use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Notes;
+use App\Models\PlacementTest;
 use App\Models\StudentProgress;
 use Carbon\Carbon;
 
@@ -87,4 +89,48 @@ class StudentRepository
         $note->delete();
         return true;
     }
+
+    //View my roadmap as a guest
+    public function getRoadmapCourses($guestId)
+    {
+        $placementTest = PlacementTest::where('GuestId', $guestId)
+            ->where('Status', 'Completed')->latest()->first();
+
+        if (!$placementTest) {
+            return ['message' => 'Placement test record not found'];
+        }
+
+        $currentLevel = $placementTest->Level;
+        $languageId = $placementTest->LanguageId;
+
+        return Course::where('LanguageId', $languageId)
+            ->get()->filter(function ($course) use ($currentLevel) {
+                return $this->CompareLevel($course->Level, $currentLevel) >= 0;
+            })->values();
+    }
+
+    protected function compareLevel($levelA, $levelB)
+    {
+        $partsA = explode('.', $levelA);
+        $partsB = explode('.', $levelB);
+
+        for ($i = 0; $i < max(count($partsA), count($partsB)); $i++) {
+            $a = $partsA[$i] ?? 0;
+            $b = $partsB[$i] ?? 0;
+
+            if (is_numeric($a) && is_numeric($b)) {
+                if ((int)$a !== (int)$b) {
+                    return (int)$a - (int)$b;
+                }
+            } else {
+                // For letter comparison like A, B, C
+                if ($a !== $b) {
+                    return strcmp($a, $b);
+                }
+            }
+        }
+
+        return 0;
+    }
+
 }

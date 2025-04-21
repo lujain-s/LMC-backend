@@ -188,4 +188,14 @@ class StudentController extends Controller
             'Progress' => $progress
         ]);
     }
+
+    public function viewRoadmap() {
+        $guestId = auth()->user()->id;
+
+        $roadmap = $this->studentService->getRoadmap($guestId);
+
+        return response()->json([
+            'Your Roadmap' => $roadmap
+        ]);
+    }
 }

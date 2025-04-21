@@ -91,6 +91,8 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
 
     Route::get("viewMyLessons/{course}", [StudentController::class,"viewMyLessons"]);
 
+    Route::get("viewRoadmap", [StudentController::class,"viewRoadmap"]);
+
     Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
 
     Route::get("viewAvailableCourses", [StudentController::class,"viewAvailableCourses"]);
@@ -118,6 +120,8 @@ Route::middleware(['auth:api' , 'role:Guest'])->prefix('guest')->group(function(
     Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
 
     Route::get("viewTeacher/{teacherId}", [StudentController::class,"viewTeacher"]);
+
+    Route::get("viewRoadmap", [StudentController::class,"viewRoadmap"]);
 });
 
 // Authenticated routes (all logged-in users)

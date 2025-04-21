@@ -122,4 +122,10 @@ class StudentService
         return $this->studentRepository->calculateProgress($studentId);
     }
 
+    //View my rroadmap as a guest
+    public function getRoadmap($guestId)
+    {
+        return $this->studentRepository->getRoadmapCourses($guestId);
+    }
+
 }
