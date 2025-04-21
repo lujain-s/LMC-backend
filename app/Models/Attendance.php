@@ -11,7 +11,7 @@ class Attendance extends Model
 
     protected $fillable = [
         "StudentId",
-        "CourseId",
+        "LessonId",
         "Bonus",
     ] ;
 
@@ -19,7 +19,7 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'StudentId');
     }
 
-    public function Course(){
-        return $this->belongsTo(Course::class, 'CourseId');
+    public function Lesson(){
+        return $this->belongsTo(Lesson::class, 'LessonId');
     }
 }

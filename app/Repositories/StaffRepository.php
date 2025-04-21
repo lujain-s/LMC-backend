@@ -72,7 +72,7 @@ class StaffRepository
 
     public function createSchedule($courseId, $data)
     {
-        return DB::table('courseschedules')->insert([
+        return DB::table('course_schedules')->insert([
             'CourseId' => $courseId,
             'RoomId' => $data['RoomId'],
             'Start_Enroll' => $data['Start_Enroll'],
@@ -105,7 +105,7 @@ class StaffRepository
     //Edit course
     public function updateCourseSchedule($courseId, $data)
     {
-        return DB::table('courseschedules')
+        return DB::table('course_schedules')
             ->where('CourseId', $courseId)
             ->update([
                 'RoomId' => $data['RoomId'],
@@ -125,7 +125,7 @@ class StaffRepository
     {
         $courseDays = (array) $courseDays;
 
-        return DB::table('courseschedules')
+        return DB::table('course_schedules')
             ->where('RoomId', $roomId)
             ->where(function ($query) use ($startDate, $endDate, $courseDays, $startTime, $endTime) {
                 $query->where(function ($q) use ($startDate, $endDate) {
@@ -161,7 +161,7 @@ class StaffRepository
 
         Lesson::where('CourseId', $course->id)->delete();
 
-        DB::table('courseschedules')->where('CourseId', $course->id)->delete();
+        DB::table('course_schedules')->where('CourseId', $course->id)->delete();
 
         $course->delete();
     }

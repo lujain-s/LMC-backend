@@ -28,4 +28,8 @@ class Lesson extends Model
     public function FlashCard(){
         return $this->hasMany(FlashCard::class, 'FlashCardId');
     }
+
+    public function Attendance(){
+        return $this->hasMany(Attendance::class, 'AttendanceId');
+    }
 }

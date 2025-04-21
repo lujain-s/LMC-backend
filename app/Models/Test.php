@@ -9,10 +9,16 @@ class Test extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'CourseId',
+        'TeacherId',
+        'Title',
+        'Duration',
+        'Mark',
+    ];
 
     public function User(){
-        return $this->belongsTo(User::class, 'UserId');
+        return $this->belongsTo(User::class, 'TeacherId');
     }
 
     public function Course(){

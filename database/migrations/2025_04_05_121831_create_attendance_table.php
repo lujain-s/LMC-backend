@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('StudentId')->constrained('users');
-            $table->foreignId('CourseId')->constrained('courses');
+            $table->foreignId('LessonId')->constrained('lessons');
             $table->float('Bonus')->default(0);
             $table->timestamps();
         });

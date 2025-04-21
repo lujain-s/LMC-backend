@@ -205,13 +205,13 @@ class StaffController extends Controller
     public function enterBonus(Request $request)
     {
         $validated = $request->validate([
-            'CourseId' => 'required|exists:courses,id',
+            'LessonId' => 'required|exists:lessons,id',
             'StudentId' => 'required|exists:users,id',
             'Bonus' => 'required|numeric|min:0',
         ]);
 
         $result = $this->staffService->enterBonus(
-            $validated['CourseId'],
+            $validated['LessonId'],
             $validated['StudentId'],
             $validated['Bonus']
         );
@@ -226,12 +226,12 @@ class StaffController extends Controller
     public function markAttendance(Request $request)
     {
         $validated = $request->validate([
-            'CourseId' => 'required|exists:courses,id',
+            'LessonId' => 'required|exists:lessons,id',
             'StudentId' => 'required|exists:users,id',
         ]);
 
         $result = $this->staffService->markAttendance(
-            $validated['CourseId'],
+            $validated['LessonId'],
             $validated['StudentId']
         );
 
@@ -343,7 +343,4 @@ class StaffController extends Controller
         ]);
     }
 
-    public function requestPrivateCourse() {
-
-    }
 }

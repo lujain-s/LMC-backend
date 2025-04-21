@@ -229,19 +229,21 @@ class StaffService
     }
 
     //Check attendance, enter bonus
-    public function enterBonus($courseId, $studentId, $bonus)
+    public function enterBonus($lessonId, $studentId, $bonus)
     {
         $teacherId = auth()->user()->id;
 
-        $course = Course::where('id', $courseId)
-            ->where('TeacherId', $teacherId)
-            ->first();
+        $lesson = Lesson::where('lessons.id', $lessonId)
+        ->join('courses', 'lessons.CourseId', '=', 'courses.id')
+        ->where('courses.TeacherId', $teacherId)
+        ->select('lessons.*')
+        ->first();
 
-        if (!$course) {
-            return ['error' => 'Course not found or not assigned to you'];
+        if (!$lesson) {
+            return ['error' => 'Lesson not found or not assigned to you'];
         }
 
-        $attendance = Attendance::where('CourseId', $courseId)
+        $attendance = Attendance::where('LessonId', $lessonId)
             ->where('StudentId', $studentId)
             ->first();
 
@@ -255,18 +257,22 @@ class StaffService
         return ['success' => 'Bonus updated successfully'];
     }
 
-    public function markAttendance($courseId, $studentId)
+    public function markAttendance($lessonId, $studentId)
     {
         $teacherId = auth()->user()->id;
 
-        $course = Course::where('id', $courseId)->where('TeacherId', $teacherId)->first();
+        $lesson = Lesson::where('lessons.id', $lessonId)
+        ->join('courses', 'lessons.CourseId', '=', 'courses.id')
+        ->where('courses.TeacherId', $teacherId)
+        ->select('lessons.*')
+        ->first();
 
-        if (!$course) {
-            return ['error' => 'Course not found or not assigned to you'];
+        if (!$lesson) {
+            return ['error' => 'Lesson not found or not assigned to you'];
         }
 
         $isEnrolled = DB::table('enrollments')
-        ->where('CourseId', $courseId)
+        ->where('CourseId', $lesson->CourseId)
         ->where('StudentId', $studentId)
         ->exists();
 
@@ -275,7 +281,7 @@ class StaffService
         }
 
         Attendance::create([
-            'CourseId' => $courseId,
+            'LessonId' => $lessonId,
             'StudentId' => $studentId,
             'Bonus' => 0,
         ]);
