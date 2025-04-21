@@ -39,6 +39,10 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::post('deleteFlashcard', [StaffController::class, 'deleteFlashCard']);
 
+    Route::get("viewAllTeacherFlashCards", [StaffController::class,"viewAllTeacherFlashCards"]);
+
+    Route::get("viewTeacherFlashCard/{flashcardId}", [StaffController::class,"viewTeacherFlashCard"]);
+
     Route::post('enterBonus', [StaffController::class, 'enterBonus']);
 
     Route::post('markAttendance', [StaffController::class, 'markAttendance']);

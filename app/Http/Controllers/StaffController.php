@@ -343,4 +343,30 @@ class StaffController extends Controller
         ]);
     }
 
+    public function viewAllTeacherFlashCards() {
+        $teacherId = auth()->user()->id;
+        $flashCards = $this->staffService->getAllFlashCards($teacherId);
+
+        return response()->json([
+            'message' => 'All flashcards retrieved successfully.',
+            'FlashCards' => $flashCards
+        ]);
+    }
+
+    public function viewTeacherFlashCard($flashcardId) {
+        $teacherId = auth()->user()->id;
+        $flashCard = $this->staffService->getFlashCard($teacherId, $flashcardId);
+
+        if (!$flashCard) {
+            return response()->json([
+                'message' => 'Flashcard not found or not accessible.',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Flashcard retrieved successfully.',
+            'FlashCard' => $flashCard
+        ]);
+    }
+
 }

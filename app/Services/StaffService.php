@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\Attendance;
 use App\Models\Course;
+use App\Models\FlashCard;
 use App\Repositories\StaffRepository;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Lesson;
-use App\Models\User;
 
 class StaffService
 {
@@ -226,6 +226,28 @@ class StaffService
         return DB::transaction(function () use ($flashcardId) {
             return $this->staffRepository->deleteFlashCard($flashcardId);
         });
+    }
+
+    //View flash cards
+    public function getAllFlashCards($teacherId)
+    {
+        $courseIds = Course::where('TeacherId', $teacherId)->pluck('id');
+
+        return FlashCard::whereIn('CourseId', $courseIds)->get();
+    }
+
+    public function getFlashCard($teacherId, $flashCardId)
+    {
+        $flashCard = FlashCard::find($flashCardId);
+
+        if (!$flashCard) {
+            return null;
+        }
+
+        $isOwned = Course::where('id', $flashCard->CourseId)
+        ->where('TeacherId', $teacherId)->exists();
+
+        return $isOwned ? $flashCard : null;
     }
 
     //Check attendance, enter bonus
