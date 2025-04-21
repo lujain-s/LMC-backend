@@ -104,6 +104,14 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
     Route::get("viewProgress", [StudentController::class,"viewProgress"]);
 });
 
+Route::middleware(['auth:api' , 'role:Guest'])->prefix('guest')->group(function() {
+    Route::get("viewAvailableCourses", [StudentController::class,"viewAvailableCourses"]);
+
+    Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
+
+    Route::get("viewTeacher/{teacherId}", [StudentController::class,"viewTeacher"]);
+});
+
 // Authenticated routes (all logged-in users)
 Route::middleware(['auth:api'])->group(function () {
     // Logout for all authenticated users

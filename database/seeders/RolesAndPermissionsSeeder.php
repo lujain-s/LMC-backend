@@ -128,6 +128,9 @@ class RolesAndPermissionsSeeder extends Seeder
                 'registerGuest',
                 'login',
                 'logout',
+                'viewTeachers',
+                'viewTeacher',
+                'viewAvailableCourses',
             ],
         ];
 
