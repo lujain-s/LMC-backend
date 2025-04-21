@@ -59,7 +59,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'editNote',
             'deleteNote',
             'viewMyNotes',
-            'calculateAttendance',
             'viewProgress',
         ];
 
@@ -121,7 +120,6 @@ class RolesAndPermissionsSeeder extends Seeder
               'editNote',
               'deleteNote',
               'viewMyNotes',
-              'calculateAttendance',
               'viewProgress',
             ],
             'Guest' => [

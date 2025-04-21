@@ -9,13 +9,18 @@ class StudentProgress extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'StudentId',
+        'CourseId',
+        'Percentage',
+        'Score',
+    ];
 
     public function Course(){
         return $this->belongsTo(Course::class, 'CourseId');
     }
 
     public function User(){
-        return $this->hasOne(User::class, 'UserId');
+        return $this->hasOne(User::class, 'StudentId');
     }
 }

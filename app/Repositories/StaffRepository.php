@@ -2,11 +2,13 @@
 
 namespace App\Repositories;
 
+use App\Models\Attendance;
 use App\Models\Course;
 use App\Models\User;
 use App\Models\Enrollment;
 use App\Models\FlashCard;
 use App\Models\Lesson;
+use App\Models\StudentProgress;
 use App\Models\Test;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -179,7 +181,44 @@ class StaffRepository
         ->with('Course')->get();
     }
 
+    //Update student's progress
+    public function updateStudentProgress($studentId, $courseId)
+    {
+        $lessons = Lesson::where('CourseId', $courseId)->get();
+
+        $attendances = Attendance::where('StudentId', $studentId)
+            ->whereIn('LessonId', $lessons->pluck('id'))->get();
+
+        $totalLessons = $lessons->count();
+        $attendedLessons = $attendances->count();
+
+        $attendancePercentage = $totalLessons > 0
+            ? round(($attendedLessons / $totalLessons) * 100, 2)
+            : 0;
+
+        $totalBonus = $attendances->sum('Bonus');
+
+        $score = $totalBonus;  //Later we can add test marks here
+
+        $studentProgress = StudentProgress::where('StudentId', $studentId)
+            ->where('CourseId', $courseId)->first();
+
+        if ($studentProgress) {
+            $studentProgress->Percentage = $attendancePercentage;
+            $studentProgress->Score = $score;
+            $studentProgress->save();
+        } else {
+            StudentProgress::create([
+                'StudentId' => $studentId,
+                'CourseId' => $courseId,
+                'Percentage' => $attendancePercentage,
+                'Score' => $score,
+            ]);
+        }
+    }
+
     //Flash cards
+
     public function createFlashCard($data)
     {
         $lesson = Lesson::findOrFail($data['LessonId']);

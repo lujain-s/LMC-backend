@@ -99,8 +99,6 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
 
     Route::get("viewMyNotes", [StudentController::class,"viewMyNotes"]);
 
-    Route::get("calculateAttendance", [StudentController::class,"calculateAttendance"]);
-
     Route::get("viewProgress", [StudentController::class,"viewProgress"]);
 });
 

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('studentprogress', function (Blueprint $table) {
+        Schema::create('student_progress', function (Blueprint $table) {
             $table->id();
             $table->foreignId('StudentId')->constrained('users');
             $table->foreignId('CourseId')->constrained('courses');
             $table->float('Percentage');
-            $table->float('FinalScore');
+            $table->float('Score');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('studentprogress');
+        Schema::dropIfExists('student_progress');
     }
 };

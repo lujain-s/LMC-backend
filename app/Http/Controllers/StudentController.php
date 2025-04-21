@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 
-
 class StudentController extends Controller
 {
     protected $studentService;
@@ -143,16 +142,6 @@ class StudentController extends Controller
 
     public function requestPrivateCourse() {
 
-    }
-
-    public function calculateAttendance() {
-        $studentId = auth()->user()->id;
-        $attendance = $this->studentService->calculateAttendance($studentId);
-
-        return response()->json([
-            'message' => 'Attendance calculated successfully.',
-            'Attendance' => $attendance
-        ]);
     }
 
     public function viewProgress() {

@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\Notes;
+use App\Models\StudentProgress;
 use App\Models\User;
 use App\Repositories\StudentRepository;
 
@@ -80,69 +81,9 @@ class StudentService
     }
 
     //View progress
-    public function calculateAttendance($studentId)
-    {
-        $enrollments = Enrollment::where('StudentId', $studentId)->with('course.Lesson')->get();
-
-        $data = [];
-
-        foreach ($enrollments as $enrollment) {
-            $course = $enrollment->course;
-            $lessons = $course->Lesson;
-
-            $totalLessons = $lessons->count();
-            $attended = Attendance::where('StudentId', $studentId)
-                ->whereIn('LessonId', $lessons->pluck('id'))
-                ->count();
-
-            $percentage = $totalLessons > 0
-                ? round(($attended / $totalLessons) * 100, 2)
-                : 0;
-
-            $data[] = [
-                'CourseId' => $course->id,
-                'Total Lessons' => $totalLessons,
-                'Attended' => $attended,
-                'Attendance %' => $percentage . '%',
-            ];
-        }
-
-        return $data;
-    }
-
     public function getProgress($studentId)
     {
-        $enrollments = Enrollment::where('StudentId', $studentId)->with('course.Lesson')->get();
-
-        $result = [];
-
-        foreach ($enrollments as $enrollment) {
-            $course = $enrollment->course;
-            $lessons = $course->Lesson;
-
-            $totalLessons = $lessons->count();
-            $attendedLessons = Attendance::where('StudentId', $studentId)
-                ->whereIn('LessonId', $lessons->pluck('id'))
-                ->count();
-
-            $attendancePercentage = $totalLessons > 0
-                ? round(($attendedLessons / $totalLessons) * 100, 2)
-                : 0;
-
-            $upcomingLessons = $lessons->where('Date', '>=', now()->toDateString())
-                                        ->sortBy('Date')
-                                        ->values();
-
-            $result[] = [
-                'CourseId' => $course->id,
-                'Total Lessons' => $totalLessons,
-                'Attended Lessons' => $attendedLessons,
-                'Attendance Percentage' => $attendancePercentage . '%',
-                'Upcoming Lessons' => $upcomingLessons,
-            ];
-        }
-
-        return $result;
+        return $this->studentRepository->calculateProgress($studentId);
     }
 
 }

@@ -254,6 +254,8 @@ class StaffService
         $attendance->Bonus = $bonus;
         $attendance->save();
 
+        $this->staffRepository->updateStudentProgress($studentId, $lesson->CourseId);
+
         return ['success' => 'Bonus updated successfully'];
     }
 
@@ -285,6 +287,8 @@ class StaffService
             'StudentId' => $studentId,
             'Bonus' => 0,
         ]);
+
+        $this->staffRepository->updateStudentProgress($studentId, $lesson->CourseId);
 
         return ['success' => 'Attendance record created'];
     }
