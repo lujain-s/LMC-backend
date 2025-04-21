@@ -42,6 +42,14 @@ class StudentService
         return User::role('Teacher')->select('id', 'name', 'email')->get();
     }
 
+    public function getTeacher($teacherId)
+    {
+        return User::role('Teacher')
+            ->where('id', $teacherId)
+            ->select('id', 'name', 'email')
+            ->first();
+    }
+
     //Note
     public function addNote($data) {
         return $this->studentRepository->createNote($data);

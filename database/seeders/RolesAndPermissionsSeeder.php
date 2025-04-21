@@ -54,10 +54,13 @@ class RolesAndPermissionsSeeder extends Seeder
             'viewEnrolledCourses',
             'viewMyLessons',
             'viewTeachers',
+            'viewTeacher',
             'addNote',
             'editNote',
             'deleteNote',
             'viewMyNotes',
+            'calculateAttendance',
+            'viewProgress',
         ];
 
         // Create all permissions
@@ -113,10 +116,13 @@ class RolesAndPermissionsSeeder extends Seeder
               'viewEnrolledCourses',
               'viewMyLessons',
               'viewTeachers',
+              'viewTeacher',
               'addNote',
               'editNote',
               'deleteNote',
               'viewMyNotes',
+              'calculateAttendance',
+              'viewProgress',
             ],
             'Guest' => [
                 'registerGuest',

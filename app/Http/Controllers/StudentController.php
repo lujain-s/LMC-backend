@@ -55,7 +55,16 @@ class StudentController extends Controller
     }
 
     public function viewTeacher($teacherId){
+        $teacher = $this->studentService->getTeacher($teacherId);
 
+        if (!$teacher) {
+            return response()->json(['message' => 'Teacher not found.'], 404);
+        }
+
+        return response()->json([
+            'message' => 'Teacher retrieved successfully.',
+            'Teacher' => $teacher,
+        ]);
     }
 
     public function takePlacementTest() {
