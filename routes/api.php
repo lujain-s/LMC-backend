@@ -89,6 +89,8 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
 
     Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
 
+    Route::get("viewAvailableCourses", [StudentController::class,"viewAvailableCourses"]);
+
     Route::get("viewTeacher/{teacherId}", [StudentController::class,"viewTeacher"]);
 
     Route::post("addNote", [StudentController::class,"addNote"]);

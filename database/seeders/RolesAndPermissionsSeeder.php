@@ -60,6 +60,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'deleteNote',
             'viewMyNotes',
             'viewProgress',
+            'viewAvailableCourses',
         ];
 
         // Create all permissions
@@ -121,6 +122,7 @@ class RolesAndPermissionsSeeder extends Seeder
               'deleteNote',
               'viewMyNotes',
               'viewProgress',
+              'viewAvailableCourses',
             ],
             'Guest' => [
                 'registerGuest',

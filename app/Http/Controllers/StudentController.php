@@ -66,6 +66,15 @@ class StudentController extends Controller
         ]);
     }
 
+    public function viewAvailableCourses() {
+        $courses = $this->studentService->getAvailableCourses();
+
+        return response()->json([
+            'message' => 'Available courses retrieved successfully.',
+            'Available Courses' => $courses
+        ]);
+    }
+
     public function takePlacementTest() {
 
     }

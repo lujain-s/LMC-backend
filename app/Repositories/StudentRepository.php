@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Attendance;
 use App\Models\Enrollment;
-use App\Models\Lesson;
 use App\Models\Notes;
 use App\Models\StudentProgress;
 use Carbon\Carbon;

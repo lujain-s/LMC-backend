@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Attendance;
+use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\Notes;
-use App\Models\StudentProgress;
 use App\Models\User;
 use App\Repositories\StudentRepository;
+use Carbon\Carbon;
 
 class StudentService
 {
@@ -41,6 +41,19 @@ class StudentService
     //View teachers
     public function getAllTeachers() {
         return User::role('Teacher')->select('id', 'name', 'email')->get();
+    }
+
+    //View available courses
+    public function getAvailableCourses() {
+        $currentDate = Carbon::today();
+
+        $courses = Course::where('Status', 'Unactive')
+            ->whereHas('CourseSchedule', function($query) use ($currentDate) {
+                $query->where('Start_Enroll', '>=', $currentDate)
+                      ->where('End_Enroll', '>=', $currentDate);
+            })->get();
+
+        return $courses;
     }
 
     public function getTeacher($teacherId)
