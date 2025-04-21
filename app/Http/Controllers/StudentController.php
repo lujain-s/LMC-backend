@@ -149,10 +149,35 @@ class StudentController extends Controller
         ]);
     }
 
+    public function viewAllFlashCards() {
+        $studentId = auth()->user()->id;
+        $flashCards = $this->studentService->getAllFlashCards($studentId);
+
+        return response()->json([
+            'message' => 'All flashcards retrieved successfully.',
+            'FlashCards' => $flashCards
+        ]);
+    }
+
+    public function viewFlashCard($flashcardId) {
+        $studentId = auth()->user()->id;
+        $flashCard = $this->studentService->getFlashCard($studentId, $flashcardId);
+
+        if (!$flashCard) {
+            return response()->json([
+                'message' => 'Flashcard not found or not accessible.',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Flashcard retrieved successfully.',
+            'FlashCard' => $flashCard
+        ]);
+    }
+
     public function requestPrivateCourse() {
 
     }
-
     public function viewProgress() {
         $studentId = auth()->user()->id;
 

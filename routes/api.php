@@ -93,6 +93,10 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
 
     Route::get("viewTeacher/{teacherId}", [StudentController::class,"viewTeacher"]);
 
+    Route::get("viewAllFlashCards", [StudentController::class,"viewAllFlashCards"]);
+
+    Route::get("viewFlashCard/{flashcardId}", [StudentController::class,"viewFlashCard"]);
+
     Route::post("addNote", [StudentController::class,"addNote"]);
 
     Route::post("editNote/{noteId}", [StudentController::class,"editNote"]);

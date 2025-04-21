@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\FlashCard;
 use App\Models\Lesson;
 use App\Models\Notes;
 use App\Models\User;
@@ -62,6 +63,28 @@ class StudentService
             ->where('id', $teacherId)
             ->select('id', 'name', 'email')
             ->first();
+    }
+
+    //View flash cards
+    public function getAllFlashCards($studentId)
+    {
+        $courseIds = Enrollment::where('StudentId', $studentId)->pluck('CourseId');
+
+        return FlashCard::whereIn('CourseId', $courseIds)->get();
+    }
+
+    public function getFlashCard($studentId, $flashCardId)
+    {
+        $flashCard = FlashCard::find($flashCardId);
+
+        if (!$flashCard) {
+            return null;
+        }
+
+        $isEnrolled = Enrollment::where('StudentId', $studentId)
+            ->where('CourseId', $flashCard->CourseId)->exists();
+
+        return $isEnrolled ? $flashCard : null;
     }
 
     //Note

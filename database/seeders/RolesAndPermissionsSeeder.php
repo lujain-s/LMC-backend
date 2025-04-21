@@ -61,6 +61,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'viewMyNotes',
             'viewProgress',
             'viewAvailableCourses',
+            'viewAllFlashCards',
+            'viewFlashCard',
         ];
 
         // Create all permissions
@@ -123,6 +125,8 @@ class RolesAndPermissionsSeeder extends Seeder
               'viewMyNotes',
               'viewProgress',
               'viewAvailableCourses',
+              'viewAllFlashCards',
+              'viewFlashCard',
             ],
             'Guest' => [
                 'registerGuest',
