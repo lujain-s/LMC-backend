@@ -49,9 +49,11 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::get('reviewStudentsNames/{courseId}', [StaffController::class, 'reviewStudentsNames']);
 
-    Route::post('enterBonus', [StaffController::class, 'enterBonus']);
+    //Route::post('addTest', [StaffController::class, 'addTest']);
 
-    Route::post('markAttendance', [StaffController::class, 'markAttendance']);
+    //Route::post('editTest', [StaffController::class, 'editTest']);
+
+    //Route::post('deleteTest', [StaffController::class, 'deleteTest']);
 
     Route::post('editComplaint/{complaint}', [ComplaintController::class, 'editComplaint']);
 
@@ -94,6 +96,10 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
     Route::get("deleteNote/{noteId}", [StudentController::class,"deleteNote"]);
 
     Route::get("viewMyNotes", [StudentController::class,"viewMyNotes"]);
+
+    Route::get("calculateAttendance", [StudentController::class,"calculateAttendance"]);
+
+    Route::get("viewProgress", [StudentController::class,"viewProgress"]);
 });
 
 // Authenticated routes (all logged-in users)

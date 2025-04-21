@@ -54,15 +54,15 @@ class StudentController extends Controller
         ]);
     }
 
+    public function viewTeacher($teacherId){
+
+    }
+
     public function takePlacementTest() {
 
     }
 
     public function takeSelfTest() {
-
-    }
-
-    public function viewProgress () {
 
     }
 
@@ -137,6 +137,23 @@ class StudentController extends Controller
     }
 
     public function calculateAttendance() {
+        $studentId = auth()->user()->id;
+        $attendance = $this->studentService->calculateAttendance($studentId);
 
+        return response()->json([
+            'message' => 'Attendance calculated successfully.',
+            'Attendance' => $attendance
+        ]);
+    }
+
+    public function viewProgress() {
+        $studentId = auth()->user()->id;
+
+        $progress = $this->studentService->getProgress($studentId);
+
+        return response()->json([
+            'message' => 'Student progress retrieved successfully.',
+            'Progress' => $progress
+        ]);
     }
 }
