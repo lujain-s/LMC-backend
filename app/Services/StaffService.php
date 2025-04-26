@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Attendance;
 use App\Models\Course;
+use App\Models\CourseSchedule;
 use App\Models\FlashCard;
 use App\Repositories\StaffRepository;
 use Illuminate\Support\Facades\DB;
@@ -183,6 +184,39 @@ class StaffService
             $this->staffRepository->deleteCourseAndLessons($course);
             return ['message' => 'Course and its lessons deleted successfully.'];
         });
+    }
+
+    public function viewCourses()
+    {
+        // BEFORE: Get today's date and time
+        $today = Carbon::now()->toDateString();
+
+        // Fetch all courses
+        $courses = Course::all();
+
+        $schedules = CourseSchedule::with('Course')->get();
+
+
+        // AFTER: Update the status based on today's date
+        foreach ($schedules as $schedule) {
+            $course = $schedule->course;
+
+            if(!$course) {
+                continue;
+            }
+
+            if ($today < $schedule->Start_Date) {
+                $course->Status = 'Unactive';
+            } elseif ($today >= $schedule->Start_Date && $today <= $schedule->End_Date) {
+                $course->Status = 'Active';
+            } elseif ($today > $schedule->End_Date) {
+                $course->Status = 'Done';
+            }
+
+            $course->save();
+        }
+
+        return $courses;
     }
 
     //Teacher---------------------------------------------------------

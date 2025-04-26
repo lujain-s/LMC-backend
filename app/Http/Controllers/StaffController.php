@@ -139,6 +139,14 @@ class StaffController extends Controller
         );
     }
 
+    public function viewCourses()
+    {
+        $courses = $this->staffService->viewCourses();
+
+        return response()->json([
+            'Courses' => $courses
+        ]);
+    }
 
     public function reviewRoomReservations (Request $request) {
 
