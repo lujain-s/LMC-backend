@@ -148,6 +148,21 @@ class StaffController extends Controller
         ]);
     }
 
+    public function viewCourse($courseId)
+    {
+        $course = $this->staffService->viewCourse($courseId);
+
+        if (!$course) {
+            return response()->json([
+                'message' => 'Course not found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'Course' => $course
+        ]);
+    }
+
     public function reviewRoomReservations (Request $request) {
 
     }

@@ -67,6 +67,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'viewTeacherFlashCard',
             'viewRoadmap',
             'viewCourses',
+            'viewCourse',
         ];
 
         // Create all permissions
@@ -91,6 +92,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'viewEnrolledStudentsInCourse',
                 'getAllEnrolledStudents',
                 'viewCourses',
+                'viewCourse',
             ],
             'Teacher' => [
                 'registerGuest',
@@ -113,6 +115,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'viewAllTeacherFlashCards',
                 'viewTeacherFlashCard',
                 'viewCourses',
+                'viewCourse',
             ],
             'Logistic' => [
                 'registerGuest',
@@ -137,6 +140,7 @@ class RolesAndPermissionsSeeder extends Seeder
               'viewFlashCard',
               'viewRoadmap',
               'viewCourses',
+              'viewCourse',
             ],
             'Guest' => [
                 'registerGuest',
@@ -147,6 +151,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'viewAvailableCourses',
                 'viewRoadmap',
                 'viewCourses',
+                'viewCourse',
             ],
         ];
 

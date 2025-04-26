@@ -219,6 +219,13 @@ class StaffService
         return $courses;
     }
 
+    public function viewCourse($courseId)
+    {
+        $course = Course::find($courseId);
+
+        return $course;
+    }
+
     //Teacher---------------------------------------------------------
 
     //Review schedule for today
