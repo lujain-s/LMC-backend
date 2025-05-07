@@ -48,11 +48,24 @@ class StudentService
     public function getAvailableCourses() {
         $currentDate = Carbon::today();
 
-        $courses = Course::where('Status', 'Unactive')
+        $courses = Course::with(['CourseSchedule','User'])
+            ->where('Status', 'Unactive')
             ->whereHas('CourseSchedule', function($query) use ($currentDate) {
-                $query->where('Start_Enroll', '>=', $currentDate)
+                $query->where('Start_Date', '>=', $currentDate)
                       ->where('End_Enroll', '>=', $currentDate);
-            })->get();
+            })
+            ->get()
+            ->map(function ($course) {
+                return [
+                    'id' => $course->id,
+                    'TeacherName' => $course->User->name ?? null,
+                    'LanguageId' => $course->LanguageId,
+                    'Description' => $course->Description,
+                    'Status' => $course->Status,
+                    'Level' => $course->Level,
+                    'course_schedule' => $course->CourseSchedule,
+                ];
+            });
 
         return $courses;
     }

@@ -53,6 +53,69 @@ class User extends Authenticatable implements JWTSubject{
                parent::hasPermissionTo($permission, $guardName);
     }
 
+    public function invoiceRecipients()
+    {
+       return $this->hasMany(InvoiceRecipient::class, 'UserId');
+    }
+
+    // If you want to get all invoices where the user is the creator:
+    public function createdInvoices()
+    {
+        return $this->hasMany(Invoice::class, 'CreatorId');
+    }
+
+    // Relationship to tasks via the UserTask pivot table
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'usertasks', 'UserId', 'TaskId');
+    }
+
+    public function StudentProgress()
+    {
+        return $this->hasOne(StudentProgress::class, 'StudentProgressId');
+    }
+
+    public function Notes()
+    {
+        return $this->hasOne(Notes::class, 'NotesId');
+    }
+
+    public function Test()
+    {
+        return $this->hasMany(Test::class, 'TestId');
+    }
+
+    public function Attendance(){
+        return $this->hasMany(Attendance::class, 'AttendanceId');
+    }
+
+   /* public function Announcement(){
+        return $this->hasMany(Announcement::class, 'AnnouncementId');
+    }*/
+
+    public function announcements()
+    {
+     return $this->hasMany(Announcement::class, 'CreatorId');
+    }
+
+    public function UserTask(){
+        return $this->hasMany(UserTask::class, 'UserTaskId');
+    }
+    public function Enrollment(){
+        return $this->hasMany(Enrollment::class, 'EnrollmentId');
+    }
+
+    public function Complaint(){
+        return $this->hasMany(Complaint::class, 'ComplaintId');
+    }
+
+    public function PlacementTest(){
+        return $this->hasMany(PlacementTest::class, 'PlacementTestId');
+    }
+
+    public function Course(){
+        return $this->hasMany(Course::class, 'CourseId');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

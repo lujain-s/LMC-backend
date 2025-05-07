@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class SelfTest extends Model
 {
+    protected $table = 'selftests';
+
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'LessonId',
+        'Title'
+    ];
 
     public function Lesson(){
         return $this->belongsTo(Lesson::class, 'LessonId');

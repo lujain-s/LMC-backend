@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Library extends Model
 {
+    protected $table = 'libraries';
+
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'LanguageId'
+    ];
 
     public function Language(){
         return $this->hasMany(Language::class, 'LanguageId');

@@ -2,14 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UserTask extends Model
-{
-    use HasFactory;
+class UserTask extends Pivot{
 
-    protected $fillable = [];
+
+    protected $table = 'usertasks';
+    public $incrementing = true; // If you have an auto-incrementing primary key
+    public $timestamps = true; // If your table has timestamps
+
+
+    protected $fillable = [
+        'TaskId',
+        'UserId',
+        'Completed',
+    ];
 
     public function User(){
         return $this->belongsTo(User::class, 'UserId');

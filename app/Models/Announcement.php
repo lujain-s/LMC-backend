@@ -7,11 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Announcement extends Model
 {
+    protected $table = 'announcements';
+
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'CreatorId',
+        'Title',
+        'Content',
+        'Photo'
+    ];
 
     public function User(){
         return $this->belongsTo(User::class, 'UserId');
+    }
+
+    public function creator()
+    {
+     return $this->belongsTo(User::class, 'CreatorId');
     }
 }

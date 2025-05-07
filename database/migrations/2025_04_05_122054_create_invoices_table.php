@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('TaskId')->constrained('tasks');
+            $table->foreignId('CreatorId')->constrained('users');
             $table->float('Amount');
             $table->string('Image');
             $table->enum('Status', ['Sent','Seen'])->default('Sent');

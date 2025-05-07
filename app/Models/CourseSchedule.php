@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CourseSchedule extends Model
 {
+    protected $table = 'course_schedules';
     use HasFactory;
 
     protected $fillable =[

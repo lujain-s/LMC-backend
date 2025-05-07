@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
+    protected $table = 'items';
+
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'LibraryId',
+        'File',
+        'Description'
+    ];
 
     public function Library(){
         return $this->belongsTo(Library::class, 'LibraryId');

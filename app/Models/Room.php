@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
+    protected $table = 'rooms';
+
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'Capacity',
+        'NumberOfRoom',
+        'Status',
+    ];
 
     public function CourseSchedule(){
         return $this->hasMany(CourseSchedule::class, 'CourseScheduleId');

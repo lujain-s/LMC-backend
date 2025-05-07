@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class StudentProgress extends Model
 {
+    protected $table = 'student_progress';
+
     use HasFactory;
 
     protected $fillable = [

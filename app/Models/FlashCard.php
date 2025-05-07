@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FlashCard extends Model
 {
+    protected $table = 'flash_cards';
+
     use HasFactory;
 
     protected $fillable = [

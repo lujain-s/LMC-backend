@@ -7,9 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class PlacementTest extends Model
 {
+    protected $table = 'placement_tests';
+
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'GuestId',
+        'LanguageId',
+        'Level',
+        'AudioScore',
+        'ReadingScore',
+        'SpeakingScore',
+        'TotalScore',
+        'Status'
+    ];
 
     public function Language(){
         return $this->hasOne(Language::class, 'LanguageId');

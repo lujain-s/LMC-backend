@@ -1,10 +1,16 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ComplaintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TaskController;
+
 
 // Public routes
 Route::post('LoginSuperAdmin', [AuthController::class, 'login']);
@@ -29,6 +35,24 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
     Route::get('showSolvedComplaints', [ComplaintController::class, 'showSolvedComplaints']);
 
     Route::post('checkComplaint/{complaintId}', [ComplaintController::class, 'checkComplaint']);
+
+    // Route::post('addHoliday', [HolidayController::class, 'addHoliday']);
+
+    //Route::post('deleteHoliday/{id}', [HolidayController::class, 'deleteHoliday']);
+
+    Route::post('assignTask', [TaskController::class, 'assignTask']);
+
+    Route::get('showTasks', [TaskController::class, 'showTasks']);
+
+    Route::post('addRoom', [RoomController::class, 'addRoom']);
+
+    Route::post('updateRoom/{id}', [RoomController::class, 'updateRoom']);
+
+    Route::post('addLanguage', [LanguageController::class, 'addLanguage']);
+
+    Route::post('updateLanguage/{id}', [LanguageController::class, 'updateLanguage']);
+
+    Route::delete('deleteLanguage/{id}', [LanguageController::class, 'deleteLanguage']);
 });
 
 
@@ -92,6 +116,20 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
     Route::get("viewEnrolledStudentsInCourse/{course}", [StaffController::class,"viewEnrolledStudentsInCourse"]);
 
     Route::get("getAllEnrolledStudents", [StaffController::class,"getAllEnrolledStudents"]);
+
+    Route::get('showInvoice/{id}', [InvoiceController::class, 'showInvoice']);
+
+    Route::post('addAnnouncement', [AnnouncementController::class, 'addAnnouncement']);
+
+    Route::post('updateAnnouncement/{id}', [AnnouncementController::class, 'updateAnnouncement']);
+
+    Route::delete('deleteAnnouncement/{id}', [AnnouncementController::class, 'deleteAnnouncement']);
+});
+
+Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin'])->prefix('logistic')->group(function() {
+
+    Route::post('createInvoice', [InvoiceController::class, 'createInvoice']);
+
 });
 
 Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->group(function() {
@@ -139,6 +177,21 @@ Route::middleware(['auth:api' , 'role:Guest'])->prefix('guest')->group(function(
 
     Route::get("viewRoadmap", [StudentController::class,"viewRoadmap"]);
 });
+
+Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])->prefix('staff')->group(function() {
+
+    Route::post('completeUserTask/{id}', [TaskController::class, 'completeUserTask']);
+
+    Route::get('myTasks', [TaskController::class, 'myTasks']);
+});
+
+Route::get('showLanguage/{id}', [LanguageController::class, 'showLanguage']);
+
+Route::get('showAllLanguage', [LanguageController::class, 'showAllLanguage']);
+
+Route::get('getAnnouncement/{id}', [AnnouncementController::class, 'getAnnouncement']);
+
+Route::get('getAllAnnouncements', [AnnouncementController::class, 'getAllAnnouncements']);
 
 // Authenticated routes (all logged-in users)
 Route::middleware(['auth:api'])->group(function () {

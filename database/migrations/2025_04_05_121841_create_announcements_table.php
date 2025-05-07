@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('SenderId')->constrained('users');
-            $table->foreignId('ReceiverId')->constrained('users');
+            $table->foreignId('CreatorId')->constrained('users');
+            //$table->foreignId('ReceiverId')->constrained('users');
             $table->string('Title');
             $table->text('Content');
+            $table->string('Photo')->nullable();
             $table->timestamps();
         });
     }

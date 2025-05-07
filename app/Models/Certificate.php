@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
 {
+    protected $table = 'certificates';
+
     use HasFactory;
 
-    protected $fillable = [] ;
+    protected $fillable = [
+        'EnrollmentId',
+        'Path'
+    ];
 
     public function Enrollment(){
         return $this->belongsTo(Enrollment::class, 'EnrollmentId');
