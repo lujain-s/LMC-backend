@@ -15,6 +15,7 @@ class Course extends Model
         "TeacherId",
         "LanguageId",
         "Description",
+        "Photo",
         "Status",
         "Level",
     ];

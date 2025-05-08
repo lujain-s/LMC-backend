@@ -67,6 +67,7 @@ class StaffRepository
             'TeacherId' => $data['TeacherId'],
             'LanguageId' => $data['LanguageId'],
             'Description' => $data['Description'],
+            'Photo' => $data['Photo'] ?? null,
             'Level' => $data['Level'],
             'Status' => 'Unactive',
         ]);
@@ -120,6 +121,13 @@ class StaffRepository
                 'CourseDays' => json_encode($data['CourseDays']),
                 'updated_at' => now(),
             ]);
+
+        if (!empty($data['Photo'])) {
+            Course::where('id', $courseId)->update([
+                'Photo' => $data['Photo'],
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     //Conflict

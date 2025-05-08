@@ -19,15 +19,6 @@ class StaffController extends Controller
         $this->staffService = $staffService;
     }
 
-    //Logistic---------------------------------------------------
-    public function addInvoice(Request $request) {
-
-    }
-
-    public function markCompletedTasks(Request $request) {
-
-    }
-
     //Secretary--------------------------------------------------
     public function enrollStudent (Request $request) {
         $data = $request->validate([
@@ -65,11 +56,18 @@ class StaffController extends Controller
 
     public function addCourse(Request $request) {
 
+        if ($request->has('CourseDays') && is_string($request->input('CourseDays'))) {
+            $request->merge([
+                'CourseDays' => array_map('trim', explode(',', $request->input('CourseDays')))
+            ]);
+        }
+
         $data = $request->validate([
             'TeacherId' => 'required|exists:users,id',
             'LanguageId' => 'required|exists:languages,id',
             'RoomId' => 'required|exists:rooms,id',
             'Description' => 'required|string',
+            'Photo' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:2048',
             'Level' => 'required|string',
             'Start_Enroll' => 'required|date|after_or_equal:now()|before_or_equal:End_Enroll',
             'End_Enroll' => 'required|date|after_or_equal:now()|after_or_equal:Start_Enroll',
@@ -91,15 +89,28 @@ class StaffController extends Controller
             ], 400);
         }
 
+        if ($request->hasFile('Photo')) {
+            $photoPath = $request->file('Photo')->store('course_photos', 'public');
+            $data['Photo'] = $photoPath;
+        }
+
         return response()->json(
             $this->staffService->createCourseWithSchedule($data)
         );
     }
 
     public function editCourse(Request $request) {
+
+        if ($request->has('CourseDays') && is_string($request->input('CourseDays'))) {
+            $request->merge([
+                'CourseDays' => array_map('trim', explode(',', $request->input('CourseDays')))
+            ]);
+        }
+        
         $data = $request->validate([
             'CourseId' => 'required|exists:courses,id',
             'RoomId' => 'required|exists:rooms,id',
+            'Photo' => 'nullable|file|image|mimes:jpeg,png,jpg,gif|max:2048',
             'Start_Enroll' => 'required|date|after_or_equal:now()|before_or_equal:End_Enroll',
             'End_Enroll' => 'required|date|after_or_equal:now()|after_or_equal:Start_Enroll',
             'Start_Date' => 'required|date|after_or_equal:now()|after:Start_Enroll|after:End_Enroll',
@@ -119,6 +130,11 @@ class StaffController extends Controller
             return response()->json([
                 'error' => "The Start Date doesn't match the selected Course Days. Please adjust the Start Date to match one of the selected days."
             ], 400);
+        }
+
+        if ($request->hasFile('Photo')) {
+            $photoPath = $request->file('Photo')->store('course_photos', 'public');
+            $data['Photo'] = $photoPath;
         }
 
         return response()->json(
@@ -164,22 +180,6 @@ class StaffController extends Controller
     }
 
     public function reviewRoomReservations (Request $request) {
-
-    }
-
-    public function addAnnouncement (Request $request) {
-
-    }
-
-    public function editAnnouncement (Request $request) {
-
-    }
-
-    public function deleteAnnouncement (Request $request) {
-
-    }
-
-    public function viewInvoices () {
 
     }
 

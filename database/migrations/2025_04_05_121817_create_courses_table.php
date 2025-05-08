@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('TeacherId')->constrained('users');
             $table->foreignId('LanguageId')->constrained('languages');
             $table->string('Description');
+            $table->string('Photo')->nullable();
             $table->enum('Status', ['Active','Unactive','Done'])->default('Unactive');
             $table->string('Level');
             $table->timestamps();
