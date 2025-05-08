@@ -51,7 +51,23 @@ class RoomController extends Controller
 
     }
 
-    public function viewAvailableRooms() {
+    public function viewAvailableRooms(Request $request) {
+        $validated = $request->validate([
+            'Start_Date' => 'required|date',
+            'Start_Time' => 'required|date_format:H:i',
+            'NumberOfLessons' => 'required|integer|min:1',
+            'CourseDays' => 'required|array|min:1'
+        ]);
 
+        $availableRooms = $this->roomService->getAvailableRooms(
+            $validated['Start_Date'],
+            $validated['Start_Time'],
+            $validated['NumberOfLessons'],
+            $validated['CourseDays']
+        );
+
+        return response()->json([
+            'AvailableRooms' => $availableRooms
+        ]);
     }
 }

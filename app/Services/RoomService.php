@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Room;
 use App\Repositories\RoomRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class RoomService
@@ -69,6 +71,39 @@ class RoomService
             'message' => 'Room updated successfully',
             'data' => $updatedRoom,
         ];
+    }
+
+    public function getAvailableRooms($startDate, $startTime, $numberOfLessons, $courseDays)
+    {
+        $endDate = $this->roomRepository->calculateCourseEndDate($startDate, $courseDays, $numberOfLessons);
+
+        // Get rooms with conflicts
+        $conflictingRoomIds = DB::table('course_schedules')
+            ->where(function ($query) use ($startDate, $endDate, $startTime, $courseDays) {
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('Start_Date', [$startDate, $endDate])
+                    ->orWhereBetween('End_Date', [$startDate, $endDate])
+                    ->orWhere(function ($q2) use ($startDate, $endDate) {
+                        $q2->where('Start_Date', '<=', $endDate)
+                            ->where('End_Date', '>=', $startDate);
+                    });
+                });
+
+                $query->where(function ($q) use ($courseDays) {
+                    foreach ($courseDays as $day) {
+                        $q->orWhereRaw("JSON_CONTAINS(CourseDays, '\"$day\"')");
+                    }
+                });
+
+                $query->where(function ($q) use ($startTime) {
+                    $q->where('Start_Time', '<=', $startTime)
+                    ->where('End_Time', '>', $startTime);
+                });
+            })
+            ->pluck('RoomId');
+
+        // Return available rooms not in conflict list
+        return Room::whereNotIn('id', $conflictingRoomIds)->get();
     }
 
 }

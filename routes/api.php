@@ -105,6 +105,8 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
 
     Route::delete("deleteCourse/{course}", [StaffController::class,"deleteCourse"]);
 
+    Route::get('viewAvailableRooms', [RoomController::class, 'viewAvailableRooms']);
+
     Route::get("viewEnrolledStudentsInCourse/{course}", [StaffController::class,"viewEnrolledStudentsInCourse"]);
 
     Route::get("getAllEnrolledStudents", [StaffController::class,"getAllEnrolledStudents"]);
@@ -162,6 +164,7 @@ Route::middleware(['auth:api' , 'role:Guest'])->prefix('guest')->group(function(
     Route::get("viewRoadmap", [StudentController::class,"viewRoadmap"]);
 });
 
+//all staff
 Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])->prefix('staff')->group(function() {
 
     Route::post('completeUserTask/{id}', [TaskController::class, 'completeUserTask']);
@@ -169,6 +172,7 @@ Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])-
     Route::get('myTasks', [TaskController::class, 'myTasks']);
 });
 
+//all users
 Route::get("viewCourses", [StaffController::class,"viewCourses"]);
 
 Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);

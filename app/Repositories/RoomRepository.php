@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Room;
+use Carbon\Carbon;
 
 class RoomRepository
 {
@@ -25,4 +26,18 @@ class RoomRepository
      return Room::find($id);
     }
 
+    public function calculateCourseEndDate($startDate, $daysOfWeek, $numberOfLessons)
+    {
+        $date = Carbon::parse($startDate);
+        $count = 0;
+
+        while ($count < $numberOfLessons) {
+            if (in_array($date->format('D'), $daysOfWeek)) {
+                $count++;
+            }
+            $date->addDay();
+        }
+
+        return $date->subDay(); // go back to last valid day
+    }
 }
