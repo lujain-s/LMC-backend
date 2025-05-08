@@ -106,7 +106,7 @@ class StaffController extends Controller
                 'CourseDays' => array_map('trim', explode(',', $request->input('CourseDays')))
             ]);
         }
-        
+
         $data = $request->validate([
             'CourseId' => 'required|exists:courses,id',
             'RoomId' => 'required|exists:rooms,id',
@@ -176,6 +176,15 @@ class StaffController extends Controller
 
         return response()->json([
             'Course' => $course
+        ]);
+    }
+
+    public function viewCourseDetails($courseId)
+    {
+        $schedule = $this->staffService->viewCourseDetails($courseId);
+
+        return response()->json([
+            'Course Details' => $schedule
         ]);
     }
 

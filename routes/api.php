@@ -71,10 +71,6 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::post('markAttendance', [StaffController::class, 'markAttendance']);
 
-    Route::get("viewCourses", [StaffController::class,"viewCourses"]);
-
-    Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
-
     Route::get('reviewMyCourses', [StaffController::class, 'reviewMyCourses']);
 
     Route::get('reviewSchedule', [StaffController::class, 'reviewSchedule']);
@@ -109,10 +105,6 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
 
     Route::delete("deleteCourse/{course}", [StaffController::class,"deleteCourse"]);
 
-    Route::get("viewCourses", [StaffController::class,"viewCourses"]);
-
-    Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
-
     Route::get("viewEnrolledStudentsInCourse/{course}", [StaffController::class,"viewEnrolledStudentsInCourse"]);
 
     Route::get("getAllEnrolledStudents", [StaffController::class,"getAllEnrolledStudents"]);
@@ -141,10 +133,6 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
 
     Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
 
-    Route::get("viewCourses", [StaffController::class,"viewCourses"]);
-
-    Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
-
     Route::get("viewAvailableCourses", [StudentController::class,"viewAvailableCourses"]);
 
     Route::get("viewTeacher/{teacherId}", [StudentController::class,"viewTeacher"]);
@@ -167,10 +155,6 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
 Route::middleware(['auth:api' , 'role:Guest'])->prefix('guest')->group(function() {
     Route::get("viewAvailableCourses", [StudentController::class,"viewAvailableCourses"]);
 
-    Route::get("viewCourses", [StaffController::class,"viewCourses"]);
-
-    Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
-
     Route::get("viewTeachers", [StudentController::class,"viewTeachers"]);
 
     Route::get("viewTeacher/{teacherId}", [StudentController::class,"viewTeacher"]);
@@ -184,6 +168,12 @@ Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])-
 
     Route::get('myTasks', [TaskController::class, 'myTasks']);
 });
+
+Route::get("viewCourses", [StaffController::class,"viewCourses"]);
+
+Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
+
+Route::get("viewCourseDetails/{courseId}", [StaffController::class,"viewCourseDetails"]);
 
 Route::get('showLanguage/{id}', [LanguageController::class, 'showLanguage']);
 

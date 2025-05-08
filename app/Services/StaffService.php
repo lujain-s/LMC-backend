@@ -256,6 +256,13 @@ class StaffService
         return $course;
     }
 
+    public function viewCourseDetails($courseId)
+    {
+        $schedule = CourseSchedule::where('CourseId', $courseId)->first();
+
+        return $schedule;
+    }
+
     //Teacher---------------------------------------------------------
 
     //Review schedule for today
