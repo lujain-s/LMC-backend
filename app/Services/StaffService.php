@@ -66,6 +66,21 @@ class StaffService
                 ], 400);
             }
 
+            $teacherConflict = $this->staffRepository->checkTeacherScheduleConflict(
+                $data['TeacherId'],
+                $data['Start_Date'],
+                $endDate,
+                $data['CourseDays'],
+                $data['Start_Time'],
+                $data['End_Time']
+            );
+
+            if ($teacherConflict) {
+                return response()->json([
+                    'Message' => 'The teacher is already assigned to another course at this time.'
+                ], 400);
+            }
+
             $course = $this->staffRepository->createCourse($data);
 
             $schedule = $this->staffRepository->createSchedule($course->id, [
@@ -140,6 +155,21 @@ class StaffService
             if ($conflict) {
                 return response()->json([
                     'Message' => 'The updated course schedule conflicts with an existing course in the same room.'
+                ], 400);
+            }
+
+            $teacherConflict = $this->staffRepository->checkTeacherScheduleConflict(
+                $data['TeacherId'],
+                $data['Start_Date'],
+                $endDate,
+                $data['CourseDays'],
+                $data['Start_Time'],
+                $data['End_Time']
+            );
+
+            if ($teacherConflict) {
+                return response()->json([
+                    'Message' => 'The teacher is already assigned to another course at this time.'
                 ], 400);
             }
 

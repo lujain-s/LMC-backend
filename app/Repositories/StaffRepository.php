@@ -130,7 +130,7 @@ class StaffRepository
         }
     }
 
-    //Conflict
+    //Conflict course schedule
     public function checkCourseScheduleConflict($roomId, $startDate, $endDate, $courseDays, $startTime, $endTime)
     {
         $courseDays = (array) $courseDays;
@@ -158,6 +158,38 @@ class StaffRepository
                         $timeQ->where('Start_Time', '<', $endTime)
                               ->where('End_Time', '>', $startTime);
                     });
+                });
+            })
+            ->exists();
+    }
+
+    //Conflict teacher
+    public function checkTeacherScheduleConflict($teacherId, $startDate, $endDate, $courseDays, $startTime, $endTime)
+    {
+        $courseDays = (array) $courseDays;
+
+        return DB::table('course_schedules')
+            ->join('courses', 'courses.id', '=', 'course_schedules.CourseId')
+            ->where('courses.TeacherId', $teacherId)
+            ->where(function ($query) use ($startDate, $endDate, $courseDays, $startTime, $endTime) {
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('Start_Date', [$startDate, $endDate])
+                    ->orWhereBetween('End_Date', [$startDate, $endDate])
+                    ->orWhere(function ($q2) use ($startDate, $endDate) {
+                        $q2->where('Start_Date', '<=', $endDate)
+                            ->where('End_Date', '>=', $startDate);
+                    });
+                });
+
+                $query->where(function ($q) use ($courseDays) {
+                    foreach ($courseDays as $day) {
+                        $q->orWhereRaw("JSON_CONTAINS(CourseDays, '\"$day\"')");
+                    }
+                });
+
+                $query->where(function ($q) use ($startTime, $endTime) {
+                    $q->where('Start_Time', '<', $endTime)
+                    ->where('End_Time', '>', $startTime);
                 });
             })
             ->exists();
