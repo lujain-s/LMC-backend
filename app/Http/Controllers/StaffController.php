@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseSchedule;
 use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,6 +27,24 @@ class StaffController extends Controller
             'CourseId' => 'required|exists:courses,id',
             'isPrivate' => 'required|boolean',
         ]);
+
+        // Check if the student is already enrolled
+        $alreadyEnrolled = Enrollment::where('StudentId', $data['StudentId'])
+            ->where('CourseId', $data['CourseId'])->exists();
+
+        if ($alreadyEnrolled) {
+            return response()->json([
+                'error' => 'The student is already enrolled in this course.'
+            ], 400);
+        }
+
+        $schedule = CourseSchedule::where('CourseId', $data['CourseId'])->first();
+
+        if ($schedule && $schedule->Enroll_Status === 'Full') {
+            return response()->json([
+                'error' => 'This course is already full. Enrollment is closed.'
+            ], 400);
+        }
 
         return response()->json(
             $this->staffService->enrollStudent($data)
