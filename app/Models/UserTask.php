@@ -15,6 +15,7 @@ class UserTask extends Pivot{
     protected $fillable = [
         'TaskId',
         'UserId',
+        'RequiresInvoice',
         'Completed',
     ];
 

@@ -22,7 +22,8 @@ class TaskService
         $this->userTaskRepo = $userTaskRepo;
     }
 
-    public function assignTask(int $creatorId, array $data): array
+    //the frst correct version
+    /*public function assignTask(int $creatorId, array $data): array
     {
         $task = $this->taskRepo->create([
             'CreatorId'    => $creatorId,
@@ -49,8 +50,38 @@ class TaskService
             ],
             'status' => 200,
         ];
+    }*/
+
+    public function assignTask(int $creatorId, array $data): array
+    {
+        $task = $this->taskRepo->create([
+            'CreatorId'       => $creatorId,
+            'Description'     => $data['Description'],
+            'Deadline'        => $data['Deadline'],
+            'Status'          => 'Pending',
+            'Completed_at'    => null,
+            'RequiresInvoice' => $data['RequiresInvoice'] ?? false,
+        ]);
+
+        $users = $this->getUsersToAssign($data, $creatorId);
+
+        if ($users->isEmpty()) {
+            $this->taskRepo->delete($task->id);
+            throw new \Exception('No valid users to assign the task to.', 400);
+        }
+
+        $this->assignTaskToUsers($task->id, $users, $data['RequiresInvoice'] ?? false);
+
+        return [
+            'data' => [
+                'message' => 'Task assigned successfully.',
+                'task' => $task,
+                'assigned_users' => $users->pluck('id'),
+            ],
+            'status' => 200,
+        ];
     }
-    
+
     protected function getUsersToAssign(array $data, int $creatorId): Collection
     {
      $users = collect();
@@ -72,6 +103,7 @@ class TaskService
      return $users->unique('id');
     }
 
+   /*the first correct version without modar
     protected function assignTaskToUsers(int $taskId, Collection $users): void
     {
         foreach ($users as $user) {
@@ -81,6 +113,56 @@ class TaskService
                 'Completed' => false,
             ]);
         }
+    }*/
+
+   /* protected function assignTaskToUsers(int $taskId, Collection $users, bool $requiresInvoice): void
+    {
+
+        foreach ($users as $user) {
+            $userRole = $user->roles()->first(); // Spatie Role
+
+            $userRequiresInvoice = false;
+
+            if ($requiresInvoice === true) {
+                // تحقق هل لدى المستخدم دور "logistic"
+                $userRequiresInvoice = $userRole && strtolower($userRole->name) === 'logistic';
+            }
+
+            $this->userTaskRepo->create([
+                'UserId'          => $user->id,
+                'TaskId'          => $taskId,
+                'RequiresInvoice' => $userRequiresInvoice,
+                'Completed'       => false,
+            ]);
+        }
+    }*/
+
+    protected function assignTaskToUsers(int $taskId, Collection $users, bool $requiresInvoice): Collection
+    {
+        $assigned = collect();
+
+        foreach ($users as $user) {
+            $userRole = $user->roles()->first();
+
+            $userRequiresInvoice = false;
+
+            if ($requiresInvoice === true) {
+                $userRequiresInvoice = $userRole && strtolower($userRole->name) === 'logistic';
+            }
+
+            $userTask = $this->userTaskRepo->create([
+                'UserId'          => $user->id,
+                'TaskId'          => $taskId,
+                'RequiresInvoice' => $userRequiresInvoice,
+                'Completed'       => false,
+            ]);
+
+            $userTask->user = $user;
+
+            $assigned->push($userTask);
+        }
+
+        return $assigned;
     }
 
     public function completeUserTask(int $taskId, int $userId): array
@@ -122,7 +204,7 @@ class TaskService
         }
 
         return [
-            'tasks' => $tasks,
+            'Tasks' => $tasks,
         ];
     }
 

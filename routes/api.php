@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
@@ -122,6 +123,15 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
     Route::post('updateAnnouncement/{id}', [AnnouncementController::class, 'updateAnnouncement']);
 
     Route::delete('deleteAnnouncement/{id}', [AnnouncementController::class, 'deleteAnnouncement']);
+
+    Route::post('uploadFile', [LibraryController::class, 'uploadFile']);
+
+    Route::post('addLanguageToLibrary', [LibraryController::class, 'addLanguageToLibrary']);
+
+    Route::post('editFileInLibrary/{id}', [LibraryController::class, 'editFile']);
+
+    Route::delete('deleteFileInLibrary/{id}', [LibraryController::class, 'deleteFile']);
+
 });
 
 Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin'])->prefix('logistic')->group(function() {
@@ -190,6 +200,12 @@ Route::get('showAllLanguage', [LanguageController::class, 'showAllLanguage']);
 Route::get('getAnnouncement/{id}', [AnnouncementController::class, 'getAnnouncement']);
 
 Route::get('getAllAnnouncements', [AnnouncementController::class, 'getAllAnnouncements']);
+
+Route::get('getLanguagesThatHaveLibrary', [LibraryController::class, 'getLanguages']);
+
+Route::get('getFilesByLanguage/{id}', [LibraryController::class, 'getFilesByLanguage']);
+
+Route::get('downloadFile/{id}', [LibraryController::class, 'downloadFile']);
 
 // Authenticated routes (all logged-in users)
 Route::middleware(['auth:api'])->group(function () {

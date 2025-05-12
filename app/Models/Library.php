@@ -15,11 +15,11 @@ class Library extends Model
         'LanguageId'
     ];
 
-    public function Language(){
-        return $this->hasMany(Language::class, 'LanguageId');
+    public function language(){
+        return $this->belongsTo(Language::class, 'LanguageId');
     }
 
-    public function Item(){
-        return $this->hasMany(Item::class, 'ItemId');
+    public function items(){
+        return $this->hasMany(Item::class, 'LibraryId');
     }
 }

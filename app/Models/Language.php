@@ -20,9 +20,14 @@ class Language extends Model
         return $this->hasOne(PlacementTest::class, 'PlacementTestId');
     }
 
-    public function Library(){
-        return $this->belongsTo(Library::class, 'LibraryId');
+    public function library(){
+        return $this->hasOne(Library::class, 'LanguageId');
     }
+
+    public function libraries(){
+        return $this->hasMany(Library::class, 'LanguageId');
+    }
+
     public function Course(){
         return $this->hasMany(Course::class, 'CourseId');
     }

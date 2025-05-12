@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('Description');
             $table->enum('Status', ['Pending','Done'])->default('Pending');
             $table->dateTime('Deadline');  //'2025-04-05 14:30:00'
+            $table->boolean('RequiresInvoice')->default(false);
             $table->dateTime('Completed_at')->nullable();
             $table->timestamps();
         });

@@ -16,7 +16,8 @@ class TaskController extends Controller
         $this->taskService = $taskService;
     }
 
-    public function assignTask(Request $request)
+    //the first correct version
+    /*public function assignTask(Request $request)
     {
         $validated = $request->validate([
             'Description' => 'required|string',
@@ -37,6 +38,30 @@ class TaskController extends Controller
         $result = $this->taskService->assignTask($creatorId, $validated);
 
         return response()->json($result['data'], $result['status']);
+    }*/
+
+    public function assignTask(Request $request)
+    {
+     $validated = $request->validate([
+        'Description' => 'required|string',
+        'Deadline' => 'required|date',
+        'role_id' => 'nullable|integer',
+        'user_id' => 'nullable|integer',
+        'RequiresInvoice' => 'boolean',
+     ]);
+
+     $creatorId = auth()->id();
+     if (!$creatorId) {
+        return response()->json(['message' => 'Unauthenticated.'], 401);
+     }
+
+     if (!empty($validated['user_id']) && $validated['user_id'] == $creatorId) {
+        return response()->json(['message' => 'You cannot assign a task to yourself.'], 400);
+     }
+
+     $result = $this->taskService->assignTask($creatorId, $validated);
+
+     return response()->json($result['data'], $result['status']);
     }
 
     public function completeUserTask($taskId): JsonResponse
@@ -94,7 +119,6 @@ class TaskController extends Controller
             ], $e->getCode() ?: 404);
         }
     }
-
 
     public function updateTaskStatus (Request $request) {
 

@@ -14,6 +14,7 @@ class Task extends Model
         'Description',
         'Status',
         'Deadline',
+        'RequiresInvoice',
         'Completed_at'
     ];
 
