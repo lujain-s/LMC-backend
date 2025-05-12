@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Damascus',
 
     /*
     |--------------------------------------------------------------------------
@@ -164,7 +164,7 @@ return [
          * Application Service Providers...
          */
 
-         
+
 
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
@@ -178,7 +178,7 @@ return [
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         //... باقي الخدمات
-    
+
         /*
          * Application Service Providers...
          */
@@ -186,13 +186,13 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-    
+
         // ✅ Add the Spatie Permission Service Provider
         Spatie\Permission\PermissionServiceProvider::class,
 
-      
 
-        
+
+
     ])->toArray(),
 
     /*

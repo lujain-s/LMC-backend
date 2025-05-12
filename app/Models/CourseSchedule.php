@@ -15,6 +15,7 @@ class CourseSchedule extends Model
         "RoomId",
         "Start_Enroll",
         "End_Enroll",
+        "Enroll_Status",
         "Start_Date",
         "End_Date",
         "CourseDays",

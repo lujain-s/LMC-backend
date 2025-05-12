@@ -18,6 +18,6 @@ class Room extends Model
     ];
 
     public function CourseSchedule(){
-        return $this->hasMany(CourseSchedule::class, 'CourseScheduleId');
+        return $this->hasMany(CourseSchedule::class, 'RoomId');
     }
 }

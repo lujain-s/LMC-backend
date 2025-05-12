@@ -2,11 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\CourseSchedule;
 use Illuminate\Support\ServiceProvider;
-use App\Models\User;
-use App\Policies\UserPolicy;
-
-
+use App\Observers\CourseScheduleObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,15 +13,17 @@ class AppServiceProvider extends ServiceProvider
      * Register any application services.
      */
 
-     public function register(): void{//
-        }
+    public function register(): void
+    {
+        //
+    }
 
 
     /**
      * Bootstrap any application services.
      */
     public function boot()
-{
-   //
-}
+    {
+        CourseSchedule::observe(CourseScheduleObserver::class);
+    }
 }

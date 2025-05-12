@@ -105,7 +105,11 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
 
     Route::delete("deleteCourse/{course}", [StaffController::class,"deleteCourse"]);
 
+    Route::get('showRooms', [RoomController::class, 'showRooms']);
+
     Route::get('viewAvailableRooms', [RoomController::class, 'viewAvailableRooms']);
+
+    Route::get('viewReservedRooms', [RoomController::class, 'viewReservedRooms']);
 
     Route::get("viewEnrolledStudentsInCourse/{course}", [StaffController::class,"viewEnrolledStudentsInCourse"]);
 

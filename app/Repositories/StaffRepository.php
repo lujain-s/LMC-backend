@@ -80,6 +80,7 @@ class StaffRepository
             'RoomId' => $data['RoomId'],
             'Start_Enroll' => $data['Start_Enroll'],
             'End_Enroll' => $data['End_Enroll'],
+            'Enroll_Status' => 'Open',
             'Start_Date' => $data['Start_Date'],
             'End_Date' => $data['End_Date'],
             'Start_Time' => $data['Start_Time'],

@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('course_schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('CourseId')->constrained('courses');
-            $table->foreignId('RoomId')->constrained('rooms');
+            $table->foreignId('RoomId')->nullable()->constrained('rooms')->nullOnDelete();
             $table->date('Start_Enroll');
             $table->date('End_Enroll');
+            $table->enum('Enroll_Status', ['Open','Full'])->default('Open');
             $table->date('Start_Date');
             $table->date('End_Date');
             $table->time('Start_Time');

@@ -65,7 +65,7 @@ class StaffController extends Controller
         $data = $request->validate([
             'TeacherId' => 'required|exists:users,id',
             'LanguageId' => 'required|exists:languages,id',
-            'RoomId' => 'required|exists:rooms,id',
+            'RoomId' => 'exists:rooms,id',
             'Description' => 'required|string',
             'Photo' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:2048',
             'Level' => 'required|string',
@@ -186,10 +186,6 @@ class StaffController extends Controller
         return response()->json([
             'Course Details' => $schedule
         ]);
-    }
-
-    public function reviewRoomReservations (Request $request) {
-
     }
 
     //Teacher---------------------------------------------------

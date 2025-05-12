@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\CourseSchedule;
 use App\Models\Room;
 use App\Repositories\RoomRepository;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +40,6 @@ class RoomService
 
     public function updateRoom(int $id, array $data)
     {
-        // تحقق من وجود الغرفة أولًا
         $room = $this->roomRepository->findRoomById($id);
         if (!$room) {
             return [
@@ -48,7 +48,6 @@ class RoomService
             ];
         }
 
-        // تحقق من صحة البيانات المدخلة
         $validator = Validator::make($data, [
             'Capacity' => 'sometimes|integer|min:1',
             'NumberOfRoom' => 'sometimes|string|unique:rooms,NumberOfRoom,' . $id,
@@ -63,7 +62,6 @@ class RoomService
             ];
         }
 
-        // تنفيذ التحديث
         $updatedRoom = $this->roomRepository->updateRoom($id, $data);
 
         return [
@@ -104,6 +102,125 @@ class RoomService
 
         // Return available rooms not in conflict list
         return Room::whereNotIn('id', $conflictingRoomIds)->get();
+    }
+
+    public function assignRoomToCourse(CourseSchedule $schedule)
+    {
+        $studentCount = $schedule->course->Enrollment()->count();
+
+        // Determine if the current room is still valid
+        $currentRoom = $schedule->RoomId ? Room::find($schedule->RoomId) : null;
+
+        $needsReassignment = true;
+
+        if ($currentRoom) {
+            $hasCapacity = $currentRoom->Capacity >= $studentCount;
+            $hasNoConflict = !$this->hasConflict($currentRoom, $schedule);
+            $needsReassignment = !($hasCapacity && $hasNoConflict);
+        }
+
+        if ($needsReassignment) {
+            // Get rooms that can fit the student count
+            $availableRooms = Room::where('Capacity', '>=', $studentCount)->get();
+
+            // Filter out conflicting rooms
+            $conflictFreeRooms = $availableRooms->filter(function ($room) use ($schedule) {
+                return !$this->hasConflict($room, $schedule);
+            });
+
+            if ($conflictFreeRooms->isNotEmpty()) {
+                // Assign the smallest room that fits
+                $selectedRoom = $conflictFreeRooms->sortBy('Capacity')->first();
+                $schedule->RoomId = $selectedRoom->id;
+                $schedule->save();
+            }
+        }
+    }
+
+    private function hasConflict(Room $room, CourseSchedule $newSchedule)
+    {
+        // Check for overlapping courses in the same room
+        return $room->CourseSchedule()
+        ->where('id', '!=', $newSchedule->id)
+        ->where(function ($query) use ($newSchedule) {
+            $query->where(function ($q) use ($newSchedule) {
+                $q->where('Start_Date', '<=', $newSchedule->End_Date)
+                  ->where('End_Date', '>=', $newSchedule->Start_Date);
+            })
+            ->where(function ($q) use ($newSchedule) {
+                $q->where('Start_Time', '<', $newSchedule->End_Time)
+                  ->where('End_Time', '>', $newSchedule->Start_Time);
+            })
+            ->where(function ($q) use ($newSchedule) {
+                foreach ($newSchedule->CourseDays as $day) {
+                    $q->orWhereJsonContains('CourseDays', $day);
+                }
+            });
+        })->exists();
+    }
+
+    public function optimizeRoomAssignments()
+    {
+        $upcomingCourses = CourseSchedule::with('Course')
+            ->whereDate('Start_Date', '>', now())
+            ->whereNotNull('RoomId')->get();
+
+        // Group schedules by overlapping time slots
+        $groups = [];
+
+        foreach ($upcomingCourses as $schedule) {
+            $matchedGroup = null;
+
+            foreach ($groups as &$group) {
+                foreach ($group as $existing) {
+                    if (
+                        $this->hasTimeConflict($existing, $schedule) &&
+                        !empty(array_intersect($existing->CourseDays, $schedule->CourseDays))
+                    ) {
+                        $matchedGroup = &$group;
+                        break 2;
+                    }
+                }
+            }
+
+            if ($matchedGroup) {
+                $matchedGroup[] = $schedule;
+            } else {
+                $groups[] = [$schedule];
+            }
+        }
+
+        foreach ($groups as $group) {
+            // Sort courses by student count ascending
+            $sortedGroup = collect($group)->sortBy(function ($schedule) {
+                return $schedule->course->Enrollment()->count();
+            });
+
+            $usedRooms = [];
+
+            foreach ($sortedGroup as $schedule) {
+                $studentCount = $schedule->course->Enrollment()->count();
+
+                $suitableRooms = Room::where('Capacity', '>=', $studentCount)->get();
+
+                foreach ($suitableRooms as $room) {
+                    if (
+                        !in_array($room->id, $usedRooms) &&
+                        !$this->hasConflict($room, $schedule)
+                    ) {
+                        $schedule->RoomId = $room->id;
+                        $schedule->save();
+                        $usedRooms[] = $room->id;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private function hasTimeConflict($a, $b)
+    {
+        return $a->Start_Time < $b->End_Time && $a->End_Time > $b->Start_Time;
     }
 
 }

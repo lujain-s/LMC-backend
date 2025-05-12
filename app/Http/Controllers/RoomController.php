@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CourseSchedule;
+use App\Models\Room;
 use App\Services\RoomService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -39,16 +42,47 @@ class RoomController extends Controller
     ]);
     }
 
-    public function checkAvailability(Request $request) {
+    public function showRooms()
+    {
+        $now = Carbon::now('Asia/Damascus');
 
-    }
+        // Reset all rooms to Available
+        Room::query()->update(['Status' => 'Available']);
 
-    public function reserveRoom(Request $request) {
+        // Get all course schedules with rooms
+        $schedules = CourseSchedule::whereNotNull('RoomId')->with('Course')->get();
 
+        foreach ($schedules as $schedule) {
+            // Check if course is active
+            if ($now->between(Carbon::parse($schedule->Start_Date), Carbon::parse($schedule->End_Date))) {
+
+                // Check if today is a course day
+                $today = $now->format('D'); // e.g., 'Tue'
+                if (in_array($today, $schedule->CourseDays)) {
+
+                    // Check if now is within course hours
+                    $startTime = Carbon::parse($schedule->Start_Time);
+                    $endTime = Carbon::parse($schedule->End_Time);
+
+                    if ($now->between($startTime, $endTime)) {
+                        // Mark the room as not available
+                        $room = Room::find($schedule->RoomId);
+                        if ($room) {
+                            $room->Status = 'NotAvailable';
+                            $room->save();
+                        }
+                    }
+                }
+            }
+        }
+        return response()->json(Room::all());
     }
 
     public function viewReservedRooms() {
 
+        $reservedRooms = Room::where('Status', 'NotAvailable')->get();
+
+        return response()->json($reservedRooms);
     }
 
     public function viewAvailableRooms(Request $request) {

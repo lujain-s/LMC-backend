@@ -10,6 +10,7 @@ use App\Repositories\StaffRepository;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Lesson;
+use App\Models\Room;
 
 class StaffService
 {
@@ -30,8 +31,36 @@ class StaffService
 
             $this->staffRepository->updateUserRole($data['StudentId'], 5);
 
-            return $this->staffRepository->createEnrollment($data);
+            $enrollment = $this->staffRepository->createEnrollment($data);
+
+            $schedule = CourseSchedule::where('CourseId', $data['CourseId'])->first();
+            $this->changeEnrollStatus($schedule);
+
+            app(RoomService::class)->assignRoomToCourse($schedule);
+            app(RoomService::class)->optimizeRoomAssignments();
+
+            return $enrollment;
         });
+    }
+
+    public function changeEnrollStatus(CourseSchedule $schedule)
+    {
+        $now = Carbon::now();
+        $studentCount = $schedule->course->Enrollment()->count();
+
+        // Case 1: Enrollment time is over
+        if ($schedule->End_Enroll && $now->gt(Carbon::parse($schedule->End_Enroll))) {
+            $newStatus = 'Full';
+        } else {
+            // Case 2: No room can fit any more students
+            $maxRoomCapacity = Room::max('Capacity');
+            $newStatus = ($studentCount >= $maxRoomCapacity) ? 'Full' : 'Open';
+        }
+
+        if ($schedule->Enroll_Status !== $newStatus) {
+            $schedule->Enroll_Status = $newStatus;
+            $schedule->save();
+        }
     }
 
     public function viewEnrolledStudentsInCourse($courseId)
@@ -50,14 +79,21 @@ class StaffService
                 $data['Number_of_lessons']
             );
 
-            $conflict = $this->staffRepository->checkCourseScheduleConflict(
-                $data['RoomId'],
-                $data['Start_Date'],
-                $endDate,
-                $data['CourseDays'],
-                $data['Start_Time'],
-                $data['End_Time']
-            );
+            $roomId = $data['RoomId'] ?? null;
+
+            $conflict = null;
+
+            if ($roomId !== null)
+            {
+                $conflict = $this->staffRepository->checkCourseScheduleConflict(
+                    $roomId,
+                    $data['Start_Date'],
+                    $endDate,
+                    $data['CourseDays'],
+                    $data['Start_Time'],
+                    $data['End_Time']
+                );
+            }
 
 
             if ($conflict) {
@@ -84,7 +120,7 @@ class StaffService
             $course = $this->staffRepository->createCourse($data);
 
             $schedule = $this->staffRepository->createSchedule($course->id, [
-                'RoomId' => $data['RoomId'],
+                'RoomId' => $roomId,
                 'Start_Enroll' => $data['Start_Enroll'],
                 'End_Enroll' => $data['End_Enroll'],
                 'Start_Date' => Carbon::parse($data['Start_Date'])->setTimeFromTimeString($data['Start_Time']),
@@ -417,4 +453,3 @@ class StaffService
     }*/
 
 }
-

@@ -61,6 +61,7 @@ class StudentService
                     'TeacherName' => $course->User->name ?? null,
                     'LanguageId' => $course->LanguageId,
                     'Description' => $course->Description,
+                    'Photo'=> $course->Photo,
                     'Status' => $course->Status,
                     'Level' => $course->Level,
                     'course_schedule' => $course->CourseSchedule,

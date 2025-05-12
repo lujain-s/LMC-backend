@@ -85,6 +85,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'showAllLanguage',
             'getAnnouncement',
             'getAllAnnouncements',
+            'viewReservedRooms',
+            'showRooms',
         ];
 
         // Create all permissions
@@ -112,6 +114,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'viewCourse',
                 'viewCourseDetails',
                 'viewAvailableRooms',
+                'viewReservedRooms',
+                'showRooms',
                 'deleteAnnouncement',
                 'updateAnnouncement',
                 'addAnnouncement',
