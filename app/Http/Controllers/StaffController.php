@@ -51,6 +51,27 @@ class StaffController extends Controller
         );
     }
 
+    public function cancelEnrollment(Request $request)
+    {
+        $data = $request->validate([
+            'StudentId' => 'required|exists:users,id',
+            'CourseId' => 'required|exists:courses,id',
+        ]);
+
+        $schedule = CourseSchedule::where('CourseId', $data['CourseId'])->first();
+
+        if (!$schedule || Carbon::now()->gte(Carbon::parse($schedule->Start_Date))) {
+            return response()->json([
+                'error' => 'You can only cancel before the course starts.'
+            ], 400);
+        }
+
+        return response()->json(
+            $this->staffService->cancelEnrollment($data)
+        );
+    }
+
+
     public function viewEnrolledStudentsInCourse($courseId) {
         return response()->json(
             $this->staffService->viewEnrolledStudentsInCourse($courseId)

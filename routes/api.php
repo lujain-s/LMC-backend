@@ -100,6 +100,8 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretarya')->group(function () {
     Route::post("enroll", [StaffController::class, "enrollStudent"]);
 
+    Route::post("cancelEnrollment", [StaffController::class, "cancelEnrollment"]);
+
     Route::post("addCourse", [StaffController::class, "addCourse"]);
 
     Route::post("editCourse", [StaffController::class,"editCourse"]);

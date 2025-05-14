@@ -43,6 +43,12 @@ class StaffRepository
         ]);
     }
 
+    public function deleteEnrollment($studentId, $courseId)
+    {
+        Enrollment::where('StudentId', $studentId)
+            ->where('CourseId', $courseId)->delete();
+    }
+
     public function getEnrolledStudentsInCourse($courseId)
     {
         return Enrollment::where('CourseId', $courseId)

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Attendance;
 use App\Models\Course;
 use App\Models\CourseSchedule;
+use App\Models\Enrollment;
 use App\Models\FlashCard;
 use App\Repositories\StaffRepository;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,30 @@ class StaffService
             app(RoomService::class)->optimizeRoomAssignments();
 
             return $enrollment;
+        });
+    }
+
+    public function cancelEnrollment($data)
+    {
+        return DB::transaction(function () use ($data) {
+
+            $this->staffRepository->deleteEnrollment($data['StudentId'], $data['CourseId']);
+
+            // Check if the user is still enrolled in any other course
+            $stillEnrolled = Enrollment::where('StudentId', $data['StudentId'])->exists();
+
+            if (!$stillEnrolled) {
+                $this->staffRepository->updateUserRole($data['StudentId'], 6);
+            }
+
+            // Recalculate enroll status and re-optimize room assignment
+            $schedule = CourseSchedule::where('CourseId', $data['CourseId'])->first();
+            $this->changeEnrollStatus($schedule);
+
+            app(RoomService::class)->assignRoomToCourse($schedule);
+            app(RoomService::class)->optimizeRoomAssignments();
+
+            return ['message' => 'Enrollment cancelled successfully.'];
         });
     }
 
