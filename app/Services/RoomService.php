@@ -161,7 +161,7 @@ class RoomService
 
     public function optimizeRoomAssignments()
     {
-        $upcomingCourses = CourseSchedule::with('Course')
+        $upcomingCourses = CourseSchedule::with(['Course','Course.Enrollment'])
             ->whereDate('Start_Date', '>', now())
             ->whereNotNull('RoomId')->get();
 
@@ -192,25 +192,26 @@ class RoomService
 
         foreach ($groups as $group) {
             // Sort courses by student count ascending
-            $sortedGroup = collect($group)->sortBy(function ($schedule) {
-                return $schedule->course->Enrollment()->count();
+            $sortedGroup = collect($group)->sortBy(function ($s) {
+                return $s->Course->Enrollment()->count();
             });
 
-            $usedRooms = [];
+            $rooms = Room::orderBy('Capacity')->get();
+            $roomAssignments = [];
 
             foreach ($sortedGroup as $schedule) {
-                $studentCount = $schedule->course->Enrollment()->count();
+                $studentCount = $schedule->Course->Enrollment()->count();
 
-                $suitableRooms = Room::where('Capacity', '>=', $studentCount)->get();
-
-                foreach ($suitableRooms as $room) {
+                foreach ($rooms as $room) {
                     if (
-                        !in_array($room->id, $usedRooms) &&
+                        $room->Capacity >= $studentCount &&
+                        !in_array($room->id, $roomAssignments) &&
                         !$this->hasConflict($room, $schedule)
                     ) {
                         $schedule->RoomId = $room->id;
                         $schedule->save();
-                        $usedRooms[] = $room->id;
+
+                        $roomAssignments[] = $room->id;
                         break;
                     }
                 }
