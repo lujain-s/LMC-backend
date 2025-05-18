@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Language;
+use App\Models\LMCInfo;
+use App\Models\User;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 
@@ -14,8 +17,18 @@ class StudentController extends Controller
         $this->studentService = $studentService;
     }
 
-    public function viewLMCInfo () {
+    public function viewLMCInfo() {
+        $info = LMCInfo::latest()->first();
+        $teachers = User::where('role_id',3)->get();
+        $languages = Language::all();
 
+        return response()->json([
+            'Title' => $info->Title,
+            'Description' => $info->Descriptions ? json_decode($info->Descriptions) : [],
+            'Photo' => $info->Photo,
+            'Teachers' => $teachers,
+            'Languages' => $languages,
+        ]);
     }
 
     public function viewEnrolledCourses() {

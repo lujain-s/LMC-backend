@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
@@ -54,6 +55,8 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
     Route::post('updateLanguage/{id}', [LanguageController::class, 'updateLanguage']);
 
     Route::delete('deleteLanguage/{id}', [LanguageController::class, 'deleteLanguage']);
+
+    Route::post('editLMCInfo', [ManagerController::class, 'editLMCInfo']);
 });
 
 
@@ -189,6 +192,8 @@ Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])-
 });
 
 //all users
+Route::get('viewLMCInfo', [StudentController::class, 'viewLMCInfo']);
+
 Route::get("viewCourses", [StaffController::class,"viewCourses"]);
 
 Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
