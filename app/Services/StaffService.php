@@ -219,8 +219,10 @@ class StaffService
                 ], 400);
             }
 
+            $teacherId = Course::where('id', $data['CourseId'])->value('TeacherId');
+
             $teacherConflict = $this->staffRepository->checkTeacherScheduleConflict(
-                $data['TeacherId'],
+                $teacherId,
                 $data['Start_Date'],
                 $endDate,
                 $data['CourseDays'],

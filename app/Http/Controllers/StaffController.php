@@ -9,7 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\StaffService;
 use Carbon\Carbon;
-
+use Exception;
+use Illuminate\Support\Facades\URL;
 
 class StaffController extends Controller
 {
@@ -107,7 +108,7 @@ class StaffController extends Controller
             'LanguageId' => 'required|exists:languages,id',
             'RoomId' => 'exists:rooms,id',
             'Description' => 'required|string',
-            'Photo' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'Photo' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
             'Level' => 'required|string',
             'Start_Enroll' => 'required|date|after_or_equal:now()|before_or_equal:End_Enroll',
             'End_Enroll' => 'required|date|after_or_equal:now()|after_or_equal:Start_Enroll',
@@ -130,8 +131,16 @@ class StaffController extends Controller
         }
 
         if ($request->hasFile('Photo')) {
-            $photoPath = $request->file('Photo')->store('course_photos', 'public');
-            $data['Photo'] = $photoPath;
+            $image = $request->file('Photo');
+            $new_name = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images'), $new_name);
+            $imageUrl = url('images/' . $new_name);
+
+            if (!file_exists(public_path('images/' . $new_name))) {
+                throw new Exception('Failed to upload image', 500);
+            }
+
+            $data['Photo'] = $imageUrl;
         }
 
         return response()->json(
@@ -173,8 +182,16 @@ class StaffController extends Controller
         }
 
         if ($request->hasFile('Photo')) {
-            $photoPath = $request->file('Photo')->store('course_photos', 'public');
-            $data['Photo'] = $photoPath;
+            $image = $request->file('Photo');
+            $new_name = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images'), $new_name);
+            $imageUrl = url('images/' . $new_name);
+
+            if (!file_exists(public_path('images/' . $new_name))) {
+                throw new Exception('Failed to upload image', 500);
+            }
+
+            $data['Photo'] = $imageUrl;
         }
 
         return response()->json(
