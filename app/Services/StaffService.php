@@ -203,6 +203,10 @@ class StaffService
                 $data['Number_of_lessons']
             );
 
+            if(!empty($data['Photo'])){
+                Course::where('id', $data['CourseId'])->update(['Photo' => $data['Photo']]);
+            }
+
             $conflict = $this->staffRepository->checkCourseScheduleConflict(
                 $data['RoomId'],
                 $data['Start_Date'],
