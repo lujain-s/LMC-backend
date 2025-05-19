@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -60,6 +61,21 @@ class AuthService
                 'role' => $userData['roles']->first(),
                 'permissions' => $userData['permissions']
             ]
+        ];
+    }
+
+    public function getMyProfile($userId)
+    {
+        $user = User::with(['roles.permissions'])->findOrFail($userId);
+
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'roles' => $user->roles->pluck('name'), // get role names
+            'permissions' => $user->roles->flatMap(function($role) {
+                return $role->permissions->pluck('name');
+            })->unique()->values(),
         ];
     }
 

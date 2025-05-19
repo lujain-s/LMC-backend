@@ -100,6 +100,34 @@ class AuthController extends Controller
         }
     }
 
+    public function profile()
+    {
+        try {
+            $user = auth()->user();
+
+            if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            $userData = $this->authService->getMyProfile($user->id);
+
+            return response()->json([
+                'user' => [
+                    'id' => $userData['id'],
+                    'name' => $userData['name'],
+                    'email' => $userData['email'],
+                ],
+                'roles' => $userData['roles'],
+                'permissions' => $userData['permissions'],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], $e->getCode() ?: 500);
+        }
+    }
+
     public function showUserInfo($id)
     {
         try {

@@ -216,6 +216,7 @@ Route::get('downloadFile/{id}', [LibraryController::class, 'downloadFile']);
 
 // Authenticated routes (all logged-in users)
 Route::middleware(['auth:api'])->group(function () {
-    // Logout for all authenticated users
+    Route::get('profile', [AuthController::class, 'profile']);
+
     Route::post('logout', [AuthController::class, 'logout']);
 });
