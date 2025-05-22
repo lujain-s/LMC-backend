@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -119,6 +120,10 @@ class AuthController extends Controller
                 ],
                 'roles' => $userData['roles'],
                 'permissions' => $userData['permissions'],
+                'Other Info' =>$user->staffInfo ? [
+                    'Photo' => $user->staffInfo->Photo,
+                    'Description' => $user->staffInfo->Description,
+                ] : null
             ], 200);
 
         } catch (\Exception $e) {
@@ -132,6 +137,7 @@ class AuthController extends Controller
     {
         try {
             $userData = $this->authService->getUserProfile($id);
+            $user = User::with(['staffInfo'])->findOrFail($id);
 
             return response()->json([
                 'user' => [
@@ -140,7 +146,11 @@ class AuthController extends Controller
                     'email' => $userData['email'],
                 ],
                 'roles' => $userData['roles'],
-                'permissions' => $userData['permissions']
+                'permissions' => $userData['permissions'],
+                'Other Info' =>$user->staffInfo ? [
+                    'Photo' => $user->staffInfo->Photo,
+                    'Description' => $user->staffInfo->Description,
+                ] : null
             ]);
 
         } catch (\Exception $e) {

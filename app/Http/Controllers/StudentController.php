@@ -62,7 +62,15 @@ class StudentController extends Controller
 
         return response()->json([
             'message' => 'Teachers retrieved successfully.',
-            'Teachers' => $teachers,
+            'Teachers' => $teachers->map(function ($teacher) {
+                return [
+                    'id' => $teacher->id,
+                    'name' => $teacher->name,
+                    'email' => $teacher->email,
+                    'Photo' => $teacher->staffInfo->Photo,
+                    'Description' => $teacher->staffInfo->Description,
+                ];
+            }),
         ]);
     }
 
@@ -75,7 +83,14 @@ class StudentController extends Controller
 
         return response()->json([
             'message' => 'Teacher retrieved successfully.',
-            'Teacher' => $teacher,
+            'Teacher' =>
+                [
+                    'id' => $teacher->id,
+                    'name' => $teacher->name,
+                    'email' => $teacher->email,
+                    'Photo' => $teacher->staffInfo->Photo,
+                    'Description' => $teacher->staffInfo->Description,
+                ],
         ]);
     }
 
@@ -191,6 +206,7 @@ class StudentController extends Controller
     public function requestPrivateCourse() {
 
     }
+    
     public function viewProgress() {
         $studentId = auth()->user()->id;
 

@@ -35,10 +35,10 @@ class ManagerController extends Controller
             }
             $image = $request->file('Photo');
             $new_name = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $new_name);
-            $imageUrl = url('images/' . $new_name);
+            $image->move(public_path('storage/LMC_photos'), $new_name);
+            $imageUrl = url('storage/LMC_photos/' . $new_name);
 
-            if (!file_exists(public_path('images/' . $new_name))) {
+            if (!file_exists(public_path('storage/LMC_photos/' . $new_name))) {
                 throw new Exception('Failed to upload image', 500);
             }
             $data['Photo'] = $imageUrl;

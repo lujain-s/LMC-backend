@@ -23,17 +23,10 @@ class InvoiceService
 
         try {
             $task = $this->invoiceRepository->findTask($request->TaskId);
-           /* if (!$task) {
-                throw new Exception('Task not found', 404);
-            }*/
 
             if (!$task) {
                 throw new Exception('Task not found', 404); // Note: 404 is integer
             }
-
-           /* if (!$request->hasFile('Image')) {
-                throw new Exception('Image file is required', 400);
-            }*/
 
             if (!$request->hasFile('Image')) {
                 throw new Exception('Image file is required', 400); // 400 is integer
@@ -41,10 +34,10 @@ class InvoiceService
 
             $image = $request->file('Image');
             $new_name = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $new_name);
-            $imageUrl = url('images/' . $new_name);
+            $image->move(public_path('storage/invoice_photos'), $new_name);
+            $imageUrl = url('storage/invoice_photos/' . $new_name);
 
-            if (!file_exists(public_path('images/' . $new_name))) {
+            if (!file_exists(public_path('storage/invoice_photos/' . $new_name))) {
                 throw new Exception('Failed to upload image', 500);
             }
 
@@ -76,8 +69,8 @@ class InvoiceService
         } catch (Exception $e) {
             DB::rollBack();
 
-            if (isset($new_name) && file_exists(public_path('images/' . $new_name))) {
-                unlink(public_path('images/' . $new_name));
+            if (isset($new_name) && file_exists(public_path('storage/invoice_photos/' . $new_name))) {
+                unlink(public_path('storage/invoice_photos/' . $new_name));
             }
 
             throw $e;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\Enrollment;
+use App\Models\StaffInfo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\StaffService;
@@ -19,6 +20,74 @@ class StaffController extends Controller
     public function __construct(StaffService $staffService)
     {
         $this->staffService = $staffService;
+    }
+
+    public function editMyInfo(Request $request) {
+        $user = auth()->id();
+
+        $validated = $request->validate([
+            'Photo' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+            'Description' => 'nullable|string',
+        ]);
+
+        $staffInfo = StaffInfo::firstOrCreate(['UserId' => $user]);
+
+        if ($request->hasFile('Photo')) {
+            $image = $request->file('Photo');
+            $new_name = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('storage/staff_photos'), $new_name);
+
+            $staffInfo->Photo = url('storage/staff_photos/' . $new_name);
+        }
+
+        if ($request->has('Description')) {
+            $staffInfo->Description = $validated['Description'];
+        }
+
+        $staffInfo->save();
+
+        return response()->json([
+            'message' => 'Staff info updated successfully.',
+            'data' => $staffInfo->only(['Photo', 'Description']),
+        ]);
+    }
+
+    public function removeMyInfo(Request $request) {
+        $userId = auth()->id();
+
+        $staffInfo = StaffInfo::where('UserId', $userId)->first();
+
+        if (!$staffInfo) {
+            return response()->json(['message' => 'Staff info not found.'], 404);
+        }
+
+        $validated = $request->validate([
+            'Remove_Photo' => 'sometimes|boolean',
+            'Remove_Description' => 'sometimes|boolean',
+        ]);
+
+        $changed = false;
+
+        if (!empty($validated['Remove_Photo'])) {
+            $staffInfo->Photo = null;
+            $changed = true;
+        }
+
+        if (!empty($validated['Remove_Description'])) {
+            $staffInfo->Description = null;
+            $changed = true;
+        }
+
+        if (!$changed) {
+            return response()->json(['message' => 'No data provided to remove.'], 400);
+        }
+
+        $staffInfo->save();
+
+        return response()->json([
+            'message' => 'Staff info cleared successfully.',
+            'data' => $staffInfo->only(['Photo', 'Description']),
+        ]);
     }
 
     //Secretary--------------------------------------------------
@@ -71,7 +140,6 @@ class StaffController extends Controller
             $this->staffService->cancelEnrollment($data)
         );
     }
-
 
     public function viewEnrolledStudentsInCourse($courseId) {
         return response()->json(
@@ -133,10 +201,10 @@ class StaffController extends Controller
         if ($request->hasFile('Photo')) {
             $image = $request->file('Photo');
             $new_name = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $new_name);
-            $imageUrl = url('images/' . $new_name);
+            $image->move(public_path('storage/course_photos'), $new_name);
+            $imageUrl = url('storage/course_photos/' . $new_name);
 
-            if (!file_exists(public_path('images/' . $new_name))) {
+            if (!file_exists(public_path('storage/course_photos/' . $new_name))) {
                 throw new Exception('Failed to upload image', 500);
             }
 
@@ -184,10 +252,10 @@ class StaffController extends Controller
         if ($request->hasFile('Photo')) {
             $image = $request->file('Photo');
             $new_name = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $new_name);
-            $imageUrl = url('images/' . $new_name);
+            $image->move(public_path('storage/course_photos'), $new_name);
+            $imageUrl = url('storage/course_photos/' . $new_name);
 
-            if (!file_exists(public_path('images/' . $new_name))) {
+            if (!file_exists(public_path('storage/course_photos/' . $new_name))) {
                 throw new Exception('Failed to upload image', 500);
             }
 

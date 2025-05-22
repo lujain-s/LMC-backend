@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\StaffInfo;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
@@ -28,6 +29,14 @@ class AuthService
         if (!$role) {
             throw new \Exception('Role not found or guard mismatch', 422);
         }
+
+        if (in_array($role->name, ['SuperAdmin', 'Secretary', 'Teacher', 'Logistic'])) {
+        StaffInfo::create([
+            'UserId' => $user->id,
+            'Photo' => null,
+            'Description' => null,
+        ]);
+    }
 
         $permissions = $this->roleRepository->assignRoleToUser($user, $role);
         $token = JWTAuth::fromUser($user);
@@ -59,7 +68,11 @@ class AuthService
                 'email' => $user->email,
                 'email_verified_at' => $user->email_verified_at,
                 'role' => $userData['roles']->first(),
-                'permissions' => $userData['permissions']
+                'permissions' => $userData['permissions'],
+                'Other Info' =>$user->staffInfo ? [
+                    'Photo' => $user->staffInfo->Photo,
+                    'Description' => $user->staffInfo->Description,
+                ] : null
             ]
         ];
     }
@@ -67,12 +80,13 @@ class AuthService
     public function getMyProfile($userId)
     {
         $user = User::with(['roles.permissions'])->findOrFail($userId);
+        $userInfo = User::with('staffInfo')->findOrFail($userId);
 
         return [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'roles' => $user->roles->pluck('name'), // get role names
+            'roles' => $user->roles->pluck('name'),
             'permissions' => $user->roles->flatMap(function($role) {
                 return $role->permissions->pluck('name');
             })->unique()->values(),
@@ -89,7 +103,7 @@ class AuthService
             'name' => $user->name,
             'email' => $user->email,
             'roles' => $userData['roles'],
-            'permissions' => $userData['permissions']
+            'permissions' => $userData['permissions'],
         ];
     }
 

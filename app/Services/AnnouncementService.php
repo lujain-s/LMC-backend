@@ -18,7 +18,7 @@ class AnnouncementService
         $this->announcementRepo = $announcementRepo;
     }
 
-    
+
     public function createAnnouncement(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -26,34 +26,34 @@ class AnnouncementService
             'Content' => 'required|string',
             'Photo' => 'sometimes|file|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-    
+
         if ($validator->fails()) {
             return ['data' => ['message' => 'Validator failed'], 'status' => 403];
         }
-    
+
         $imageUrl = null;
 
         if ($request->hasFile('Photo')) {
             $image = $request->file('Photo');
             $new_name = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $new_name);
-            $imageUrl = url('images/' . $new_name);
-        
-            if (!file_exists(public_path('images/' . $new_name))) {
+            $image->move(public_path('storage/Announcements_photos'), $new_name);
+            $imageUrl = url('storage/Announcements_photos/' . $new_name);
+
+            if (!file_exists(public_path('storage/Announcements_photos/' . $new_name))) {
                 throw new Exception('Failed to upload image', 500);
             }
         }
-        
+
         $announcement = $this->announcementRepo->createAnnouncement([
             'CreatorId' => Auth::id(),
             'Title' => $request->Title,
             'Content' => $request->Content,
             'Photo' => $imageUrl, // سيُمرر null إذا لم تكن هناك صورة
         ]);
-    
+
         return ['data' => ['message' => 'Announcement created successfully.', 'announcement' => $announcement], 'status' => 201];
     }
-    
+
     public function updateAnnouncement(Request $request, $id)
     {
      $announcement = $this->announcementRepo->findAnnouncementById($id);
@@ -89,10 +89,10 @@ class AnnouncementService
      if ($request->hasFile('Photo')) {
         $image = $request->file('Photo');
         $new_name = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('images'), $new_name);
-        $imageUrl = url('images/' . $new_name);
+        $image->move(public_path('storage/Announcements_photos'), $new_name);
+        $imageUrl = url('storage/Announcements_photos/' . $new_name);
 
-        if (!file_exists(public_path('images/' . $new_name))) {
+        if (!file_exists(public_path('storage/Announcements_photos/' . $new_name))) {
             throw new \Exception('Failed to upload image', 500);
         }
 
@@ -108,44 +108,44 @@ class AnnouncementService
      return ['data' => ['message' => 'Announcement updated successfully.', 'announcement' => $updated], 'status' => 200];
     }
 
-    
+
     public function deleteAnnouncement($id)
     {
         $announcement = $this->announcementRepo->findAnnouncementById($id);
-    
+
         if (!$announcement) {
             return ['data' => ['message' => 'Announcement not found or deleted before'], 'status' => 403];
         }
-    
+
         if ($announcement->CreatorId !== Auth::id()) {
             return ['data' => ['message' => 'Unauthorized or you are not the creator'], 'status' => 403];
         }
-    
+
         // Optional: Delete image file if exists
-        if ($announcement->Photo && file_exists(public_path('images/' . basename($announcement->Photo)))) {
-            unlink(public_path('images/' . basename($announcement->Photo)));
+        if ($announcement->Photo && file_exists(public_path('storage/Announcements_photos/' . basename($announcement->Photo)))) {
+            unlink(public_path('storage/Announcements_photos/' . basename($announcement->Photo)));
         }
-    
+
         $this->announcementRepo->deleteAnnouncement($announcement);
-    
+
         return ['data' => ['message' => 'Announcement deleted successfully.'], 'status' => 200];
     }
-    
+
     public function getAnnouncementById($id)
     {
         $announcement = $this->announcementRepo->findAnnouncementById($id);
-    
+
         if (!$announcement) {
             return ['data' => ['message' => 'Announcement not found'], 'status' => 404];
         }
-    
+
         return ['data' => ['announcement' => $announcement], 'status' => 200];
     }
-    
+
     public function getAllAnnouncements()
     {
         $announcements = $this->announcementRepo->getAllAnnouncements();
         return ['data' => ['announcements' => $announcements], 'status' => 200];
     }
-    
+
 }

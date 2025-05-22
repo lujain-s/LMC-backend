@@ -41,7 +41,10 @@ class StudentService
 
     //View teachers
     public function getAllTeachers() {
-        return User::role('Teacher')->select('id', 'name', 'email')->get();
+        return User::role('Teacher')
+            ->select('id', 'name', 'email')
+            ->with(['staffInfo:id,UserId,Photo,Description'])
+            ->get();
     }
 
     //View available courses
@@ -76,6 +79,7 @@ class StudentService
         return User::role('Teacher')
             ->where('id', $teacherId)
             ->select('id', 'name', 'email')
+            ->with(['staffInfo:id,UserId,Photo,Description'])
             ->first();
     }
 

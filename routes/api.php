@@ -185,6 +185,9 @@ Route::middleware(['auth:api' , 'role:Guest'])->prefix('guest')->group(function(
 
 //all staff
 Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])->prefix('staff')->group(function() {
+    Route::post("editMyInfo", [StaffController::class,"editMyInfo"]);
+
+    Route::post("removeMyInfo", [StaffController::class,"removeMyInfo"]);
 
     Route::post('completeUserTask/{id}', [TaskController::class, 'completeUserTask']);
 

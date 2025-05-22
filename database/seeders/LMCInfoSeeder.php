@@ -17,7 +17,7 @@ class LMCInfoSeeder extends Seeder
         LMCInfo::create([
             'Title' => 'About LMC',
             'Descriptions' => json_encode($descriptions),
-            'Photo' => url('images/sample-photo.jpg'),
+            'Photo' => url('storage/LMC_photos/sample-photo.jpg'),
         ]);
     }
 }
