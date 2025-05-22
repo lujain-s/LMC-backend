@@ -88,6 +88,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'getAllAnnouncements',
             'viewReservedRooms',
             'showRooms',
+            'editMyInfo',
+            'removeMyInfo',
         ];
 
         // Create all permissions
@@ -105,6 +107,8 @@ class RolesAndPermissionsSeeder extends Seeder
                'registerGuest',
                 'login',
                 'logout',
+                'editMyInfo',
+                'removeMyInfo',
                 'enrollStudent',
                 'cancelEnrollment',
                 'addCourse',
@@ -131,6 +135,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'registerGuest',
                 'login',
                 'logout',
+                'editMyInfo',
+                'removeMyInfo',
                 'addFlashcard',
                 'editFlashcard',
                 'deleteFlashcard',
@@ -159,6 +165,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'registerGuest',
                 'login',
                 'logout',
+                'editMyInfo',
+                'removeMyInfo',
                 'showLanguage',
                 'showAllLanguage',
                 'getAnnouncement',
