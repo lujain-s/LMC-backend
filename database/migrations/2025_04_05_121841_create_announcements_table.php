@@ -17,7 +17,7 @@ return new class extends Migration
             //$table->foreignId('ReceiverId')->constrained('users');
             $table->string('Title');
             $table->text('Content');
-            $table->string('Photo')->nullable();
+            $table->string('Media')->nullable();
             $table->timestamps();
         });
     }

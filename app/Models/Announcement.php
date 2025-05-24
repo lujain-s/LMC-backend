@@ -15,7 +15,7 @@ class Announcement extends Model
         'CreatorId',
         'Title',
         'Content',
-        'Photo'
+        'Media'
     ];
 
     public function User(){

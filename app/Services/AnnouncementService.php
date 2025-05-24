@@ -24,22 +24,22 @@ class AnnouncementService
         $validator = Validator::make($request->all(), [
             'Title' => 'required|string|max:255',
             'Content' => 'required|string',
-            'Photo' => 'sometimes|file|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'Media' => 'sometimes|file|mimes:m4v,webm,flv,wmv,mov,mkv,avi,mp4,tif,tiff,heic,svg,bmp,webp,gif,png,jpeg,jpg'
         ]);
 
         if ($validator->fails()) {
-            return ['data' => ['message' => 'Validator failed'], 'status' => 403];
+            return ['data' => ['message' => 'Validator failed', 'errors' => $validator->errors()], 'status' => 403];
         }
 
-        $imageUrl = null;
+        $MediaUrl = null;
 
-        if ($request->hasFile('Photo')) {
-            $image = $request->file('Photo');
-            $new_name = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('storage/Announcements_photos'), $new_name);
-            $imageUrl = url('storage/Announcements_photos/' . $new_name);
+        if ($request->hasFile('Media')) {
+            $media = $request->file('Media');
+            $new_name_media = time() . '_' . str_replace(' ', '_', $media->getClientOriginalName());
+            $media->move(public_path('storage/announcementMedia'), $new_name_media);
+            $MediaUrl = url('storage/announcementMedia/' . $new_name_media);
 
-            if (!file_exists(public_path('storage/Announcements_photos/' . $new_name))) {
+            if (!file_exists(public_path('storage/announcementMedia/' . $new_name_media))) {
                 throw new Exception('Failed to upload image', 500);
             }
         }
@@ -48,7 +48,7 @@ class AnnouncementService
             'CreatorId' => Auth::id(),
             'Title' => $request->Title,
             'Content' => $request->Content,
-            'Photo' => $imageUrl, // سيُمرر null إذا لم تكن هناك صورة
+            'Media' => $MediaUrl, // سيُمرر null إذا لم تكن هناك صورة
         ]);
 
         return ['data' => ['message' => 'Announcement created successfully.', 'announcement' => $announcement], 'status' => 201];
@@ -69,7 +69,7 @@ class AnnouncementService
      $validator = Validator::make($request->all(), [
         'Title' => 'sometimes|string|max:255',
         'Content' => 'sometimes|string',
-        'Photo' => 'sometimes|file|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        'Media' => 'sometimes|file|mimes:m4v,webm,flv,wmv,mov,mkv,avi,mp4,tif,tiff,heic,svg,bmp,webp,gif,png,jpeg,jpg'
      ]);
 
      if ($validator->fails()) {
@@ -86,17 +86,17 @@ class AnnouncementService
         $dataToUpdate['Content'] = $request->Content;
      }
 
-     if ($request->hasFile('Photo')) {
-        $image = $request->file('Photo');
-        $new_name = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('storage/Announcements_photos'), $new_name);
-        $imageUrl = url('storage/Announcements_photos/' . $new_name);
+     if ($request->hasFile('Media')) {
+        $media = $request->file('Media');
+        $new_name_media = time() . '_' . str_replace(' ', '_', $media->getClientOriginalName());
+        $media->move(public_path('storage/announcementMedia'), $new_name_media);
+        $MediaUrl = url('storage/announcementMedia/' . $new_name_media);
 
-        if (!file_exists(public_path('storage/Announcements_photos/' . $new_name))) {
-            throw new \Exception('Failed to upload image', 500);
+        if (!file_exists(public_path('storage/announcementMedia/' . $new_name_media))) {
+            throw new Exception('Failed to upload madia', 500);
         }
 
-        $dataToUpdate['Photo'] = $imageUrl;
+        $dataToUpdate['Media'] = $MediaUrl;
      }
 
      if (empty($dataToUpdate)) {
@@ -107,7 +107,6 @@ class AnnouncementService
 
      return ['data' => ['message' => 'Announcement updated successfully.', 'announcement' => $updated], 'status' => 200];
     }
-
 
     public function deleteAnnouncement($id)
     {
@@ -122,8 +121,8 @@ class AnnouncementService
         }
 
         // Optional: Delete image file if exists
-        if ($announcement->Photo && file_exists(public_path('storage/Announcements_photos/' . basename($announcement->Photo)))) {
-            unlink(public_path('storage/Announcements_photos/' . basename($announcement->Photo)));
+        if ($announcement->Media && file_exists(public_path('storage/announcementMedia/' . basename($announcement->Media)))) {
+            unlink(public_path('storage/announcementMedia/' . basename($announcement->Media)));
         }
 
         $this->announcementRepo->deleteAnnouncement($announcement);
