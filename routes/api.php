@@ -137,6 +137,8 @@ Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretary
 
     Route::delete('deleteFileInLibrary/{id}', [LibraryController::class, 'deleteFile']);
 
+    Route::delete('deleteLibraryForLanguage/{id}', [LibraryController::class, 'deleteLibraryForLanguage']);
+
 });
 
 Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin'])->prefix('logistic')->group(function() {

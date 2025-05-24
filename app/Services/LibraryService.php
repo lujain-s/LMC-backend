@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Item;
+use App\Models\Library;
 use App\Repositories\LibraryRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,19 +30,10 @@ class LibraryService
         }
 
         // Check if language has a library
-        /*if (!$language->library) {
-            return response()->json([
-                'message' => 'This language does not have a library',
-                'language' => $language->Name,
-                'files' => []
-            ], 200);
-        }*/
-
         if (!$language->library) {
             return [
                 'message' => 'This language does not have a library',
                 'language' => $language->Name,
-                //'files' => []
             ];
         }
 
@@ -82,6 +75,44 @@ class LibraryService
         }
 
         return $this->repository->createLibrary($languageId);
+    }
+
+    public function deleteLibraryWithFiles($libraryId)
+    {
+        $library = Library::with('language')->where('id', $libraryId)->first();
+
+        if (!$library) {
+            return 'not_found';
+        }
+
+        // Get all related items
+        $items = Item::where('LibraryId', $library->id)->get();
+
+        if ($items->isEmpty()) {
+            $folderPath = "library_files/{$library->id}";
+            if (Storage::disk('public')->exists($folderPath)) {
+                Storage::disk('public')->deleteDirectory($folderPath);
+            }
+
+            $library->delete();
+            return 'no_items';
+        }
+
+        // حذف كل العناصر والملفات المرتبطة
+        foreach ($items as $item) {
+            if ($item->file_path && Storage::disk('public')->exists($item->file_path)) {
+                Storage::disk('public')->delete($item->file_path);
+            }
+            $item->delete();
+        }
+
+        $folderPath = "library_files/{$library->id}";
+        if (Storage::disk('public')->exists($folderPath)) {
+            Storage::disk('public')->deleteDirectory($folderPath);
+        }
+
+        $library->delete();
+        return 'deleted';
     }
 
     public function editFile($id, $data, $file = null)
