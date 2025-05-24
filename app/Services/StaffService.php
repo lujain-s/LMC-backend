@@ -427,6 +427,36 @@ class StaffService
         return $isOwned ? $flashCard : null;
     }
 
+    public function viewLessonFlashCards($teacherId, $lessonId)
+    {
+        $lesson = Lesson::find($lessonId);
+
+        if (!$lesson) {
+            return null;
+        }
+
+        $ownsLesson = Course::where('id', $lesson->CourseId)
+            ->where('TeacherId', $teacherId)->exists();
+
+        if (!$ownsLesson) {
+            return null;
+        }
+
+        return FlashCard::where('LessonId', $lessonId)->get();
+    }
+
+    public function viewCourseFlashCards($teacherId, $courseId)
+    {
+        $isOwned = Course::where('id', $courseId)
+            ->where('TeacherId', $teacherId)->exists();
+
+        if (!$isOwned) {
+            return null;
+        }
+
+        return FlashCard::where('CourseId', $courseId)->get();
+    }
+
     //Check attendance, enter bonus
     public function enterBonus($lessonId, $studentId, $bonus)
     {

@@ -105,6 +105,36 @@ class StudentService
         return $isEnrolled ? $flashCard : null;
     }
 
+    public function getFlashCardsByLesson($studentId, $lessonId)
+    {
+        $lesson = Lesson::find($lessonId);
+
+        if (!$lesson) {
+            return null;
+        }
+
+        $isEnrolled = Enrollment::where('StudentId', $studentId)
+            ->where('CourseId', $lesson->CourseId)->exists();
+
+        if (!$isEnrolled) {
+            return null;
+        }
+
+        return FlashCard::where('LessonId', $lessonId)->get();
+    }
+
+    public function getFlashCardsByCourse($studentId, $courseId)
+    {
+        $isEnrolled = Enrollment::where('StudentId', $studentId)
+            ->where('CourseId', $courseId)->exists();
+
+        if (!$isEnrolled) {
+            return null;
+        }
+
+        return FlashCard::where('CourseId', $courseId)->get();
+    }
+
     //Note
     public function addNote($data) {
         return $this->studentRepository->createNote($data);

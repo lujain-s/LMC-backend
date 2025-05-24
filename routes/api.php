@@ -74,6 +74,10 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
 
     Route::get("viewTeacherFlashCard/{flashcardId}", [StaffController::class,"viewTeacherFlashCard"]);
 
+    Route::get('viewLessonFlashCards/{lessonId}', [StaffController::class, 'viewLessonFlashCards']);
+
+    Route::get('viewCourseFlashCards/{courseId}', [StaffController::class, 'viewCourseFlashCards']);
+
     Route::post('enterBonus', [StaffController::class, 'enterBonus']);
 
     Route::post('markAttendance', [StaffController::class, 'markAttendance']);
@@ -168,6 +172,10 @@ Route::middleware(['auth:api' , 'role:Student|SuperAdmin'])->prefix('student')->
     Route::get("viewAllFlashCards", [StudentController::class,"viewAllFlashCards"]);
 
     Route::get("viewFlashCard/{flashcardId}", [StudentController::class,"viewFlashCard"]);
+
+    Route::get('viewFlashCardsByLesson/{lessonId}', [StudentController::class, 'viewFlashCardsByLesson']);
+
+    Route::get('viewFlashCardsByCourse/{courseId}', [StudentController::class, 'viewFlashCardsByCourse']);
 
     Route::post("addNote", [StudentController::class,"addNote"]);
 

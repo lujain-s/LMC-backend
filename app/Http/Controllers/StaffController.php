@@ -538,4 +538,40 @@ class StaffController extends Controller
         ]);
     }
 
+    public function viewLessonFlashCards($lessonId)
+    {
+        $teacherId = auth()->user()->id;
+
+        $flashCards = $this->staffService->viewLessonFlashCards($teacherId, $lessonId);
+
+        if ($flashCards === null) {
+            return response()->json([
+                'message' => 'Lesson not found or not accessible.',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Flashcards for lesson retrieved successfully.',
+            'FlashCards' => $flashCards
+        ]);
+    }
+
+    public function viewCourseFlashCards($courseId)
+    {
+        $teacherId = auth()->user()->id;
+
+        $flashCards = $this->staffService->viewCourseFlashCards($teacherId, $courseId);
+
+        if ($flashCards === null) {
+            return response()->json([
+                'message' => 'Course not found or not accessible.',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Flashcards for course retrieved successfully.',
+            'FlashCards' => $flashCards
+        ]);
+    }
+
 }
