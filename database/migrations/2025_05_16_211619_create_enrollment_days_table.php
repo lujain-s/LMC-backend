@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lesson_backups', function (Blueprint $table) {
+        Schema::create('enrollment_days', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('CourseId')->constrained('courses');
-            $table->unsignedBigInteger('holiday_id');
-            $table->string('Title')->nullable();
-            $table->date('Date');
-            $table->time('Start_Time');
-            $table->time('End_Time');
+            $table->unsignedBigInteger('CourseId');
+            $table->date('Enroll_Date');
             $table->timestamps();
-        });
 
+            $table->foreign('CourseId')->references('id')->on('courses')->onDelete('cascade');
+            $table->unique(['CourseId', 'Enroll_Date']); // منع التكرار
+        });
     }
 
     /**
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lesson_backups');
+        Schema::dropIfExists('enrollment_days');
     }
 };

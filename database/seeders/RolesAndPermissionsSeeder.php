@@ -94,6 +94,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'showRooms',
             'editMyInfo',
             'removeMyInfo',
+            'addHoliday',
         ];
 
         // Create all permissions

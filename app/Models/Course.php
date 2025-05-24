@@ -35,6 +35,17 @@ class Course extends Model
     public function Lesson(){
         return $this->hasMany(Lesson::class, 'CourseId');
     }
+    public function lessons(){
+        return $this->hasMany(Lesson::class, 'CourseId');
+    }
+
+    public function LessonBackup(){
+        return $this->hasMany(LessonBackup::class, 'CourseId');
+    }
+
+    public function enrollment_day(){
+        return $this->hasMany(enrollment_day::class, 'CourseId');
+    }
 
     public function FlashCard(){
         return $this->hasMany(FlashCard::class, 'FlashCardId');

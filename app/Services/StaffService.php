@@ -159,6 +159,14 @@ class StaffService
 
             Lesson::insert($lessons);
 
+            $enrollmentDays = $this->generateEnrollmentDays(
+                $course->id,
+                $data['Start_Enroll'],
+                $data['End_Enroll']
+            );
+
+            DB::table('enrollment_days')->insert($enrollmentDays);
+
             return [
                 'Course' => $course,
                 'Schedule' => $schedule,
@@ -190,6 +198,25 @@ class StaffService
         }
 
         return $lessons;
+    }
+
+    private function generateEnrollmentDays($courseId, $startEnroll, $endEnroll)
+    {
+        $days = [];
+        $date = Carbon::parse($startEnroll);
+        $end = Carbon::parse($endEnroll);
+
+        while ($date->lte($end)) {
+            $days[] = [
+                'CourseId' => $courseId,
+                'Enroll_Date' => $date->format('Y-m-d'),
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+            $date->addDay();
+        }
+
+        return $days;
     }
 
     //Edit course

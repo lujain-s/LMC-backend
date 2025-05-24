@@ -13,19 +13,18 @@ class ScheduleEnrollmentBackup extends Model
 
     protected $fillable = [
         'schedule_id',
+        'holiday_id',
         'original_start_enroll',
         'original_end_enroll'
-    ];
-
-    protected $dates = [
-        'original_start_enroll',
-        'original_end_enroll',
-        'created_at',
-        'updated_at'
     ];
 
     public function schedule()
     {
         return $this->belongsTo(CourseSchedule::class, 'schedule_id');
+    }
+
+    public function holiday()
+    {
+        return $this->belongsTo(Holiday::class, 'holiday_id');
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ComplaintController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LibraryController;
@@ -38,7 +39,7 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
 
     Route::post('checkComplaint/{complaintId}', [ComplaintController::class, 'checkComplaint']);
 
-    // Route::post('addHoliday', [HolidayController::class, 'addHoliday']);
+    Route::post('addHoliday', [HolidayController::class, 'addHoliday']);
 
     //Route::post('deleteHoliday/{id}', [HolidayController::class, 'deleteHoliday']);
 
