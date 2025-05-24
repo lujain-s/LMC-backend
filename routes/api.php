@@ -228,5 +228,7 @@ Route::get('downloadFile/{id}', [LibraryController::class, 'downloadFile']);
 Route::middleware(['auth:api'])->group(function () {
     Route::get('profile', [AuthController::class, 'profile']);
 
+    Route::get('getCourseLessons/{courseId}', [StaffController::class, 'getCourseLessons']);
+
     Route::post('logout', [AuthController::class, 'logout']);
 });

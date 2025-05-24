@@ -313,6 +313,22 @@ class StaffController extends Controller
         ]);
     }
 
+    public function getCourseLessons($courseId)
+    {
+        $course = Course::find($courseId);
+
+        if (!$course) {
+            return response()->json(['error' => 'Course not found'], 404);
+        }
+
+        $lessons = $this->staffService->getCourseLessons($courseId);
+
+        return response()->json([
+            'CourseId' => $courseId,
+            'Lessons' => $lessons
+        ]);
+    }
+
     //Teacher---------------------------------------------------
     public function sendAssignments() {
 
