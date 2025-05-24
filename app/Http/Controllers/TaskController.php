@@ -75,13 +75,18 @@ class TaskController extends Controller
                 'completion_time' => $result['completion_time']
             ]);
         } catch (\Exception $e) {
+            $statusCode = $e->getCode();
+            if (!is_int($statusCode) || $statusCode < 100 || $statusCode > 599) {
+                $statusCode = 400;
+            }
+
             return response()->json([
                 'message' => $e->getMessage(),
-                'debug_info' => $e->getCode() === 404 ? [
+                'debug_info' => $statusCode === 404 ? [
                     'user_id' => auth()->id(),
                     'task_id' => $taskId
                 ] : null
-            ], $e->getCode() ?: 500);
+            ], $statusCode);
         }
     }
 
@@ -122,5 +127,27 @@ class TaskController extends Controller
 
     public function updateTaskStatus (Request $request) {
 
+    }
+
+    public function assignTaskToSecretary(Request $request)
+    {
+        $validated = $request->validate([
+            'Description' => 'required|string',
+            'Deadline' => 'required|date',
+            'CourseId' => 'required|integer|exists:courses,id',
+            'LessonId' => 'required|integer|exists:lessons,id',
+        ]);
+
+        $creatorId = auth()->id();
+        if (!$creatorId) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        try {
+            $result = $this->taskService->assignTaskToSecretaryForLesson($creatorId, $validated);
+            return response()->json($result['data'], $result['status']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 400);
+        }
     }
 }

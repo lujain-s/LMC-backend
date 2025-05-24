@@ -168,6 +168,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'showAllLanguage',
                 'getAnnouncement',
                 'getAllAnnouncements',
+                'assignTaskToSecretary',
             ],
             'Logistic' => [
                 'registerGuest',

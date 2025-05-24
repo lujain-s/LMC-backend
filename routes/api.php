@@ -98,6 +98,8 @@ Route::middleware(['auth:api', 'role:Teacher|SuperAdmin'])->prefix('teacher')->g
     Route::get('showSolvedComplaintsTeacher', [ComplaintController::class, 'showSolvedComplaintsTeacher']);
 
     Route::post('submitComplaint', [ComplaintController::class, 'submitComplaint']);
+
+    Route::post('assignTaskToSecretary', [TaskController::class, 'assignTaskToSecretary']);
 });
 
 Route::middleware(['auth:api', 'role:Secretarya|SuperAdmin'])->prefix('secretarya')->group(function () {

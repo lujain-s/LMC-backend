@@ -1,9 +1,13 @@
 <?php
 namespace App\Services;
 
+use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\User;
 use App\Repositories\TaskRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserTaskRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class TaskService
@@ -374,5 +378,56 @@ class TaskService
                     'completed_at' => $userTask->Completed ? $userTask->updated_at : null
                 ];
             })->values();
+    }
+
+    public function assignTaskToSecretaryForLesson(int $creatorId, array $data): array
+    {
+        $course = Course::find($data['CourseId']);
+        $lesson = Lesson::find($data['LessonId']);
+
+        if (!$course || !$lesson) {
+            throw new \Exception('Invalid course or lesson.', 404);
+        }
+
+        if ($course->TeacherId !== $creatorId) {
+            throw new \Exception('You are not assigned to this course.', 403);
+        }
+
+        if ($lesson->CourseId !== $course->id) {
+            throw new \Exception('The lesson does not belong to the specified course.', 400);
+        }
+
+        //task should be sent at least 3 hours before the course starts
+        $lessonStart = Carbon::parse($lesson->Date . ' ' . $lesson->Start_Time);
+        if (now()->diffInMinutes($lessonStart, false) < 180) {
+            throw new \Exception('Tasks can only be assigned at least 3 hours before the lesson.', 400);
+        }
+
+        $secretaries = User::role('Secretarya')->get();
+
+        if ($secretaries->isEmpty()) {
+            throw new \Exception('No secretary users found to assign the task.', 404);
+        }
+
+        $task = $this->taskRepo->create([
+            'CreatorId'       => $creatorId,
+            'Description'     => $data['Description'],
+            'Deadline'        => $data['Deadline'],
+            'Status'          => 'Pending',
+            'Completed_at'    => null,
+            'CourseId'        => $course->id,
+            'LessonId'        => $lesson->id,
+        ]);
+
+        $this->assignTaskToUsers($task->id, $secretaries, $data['RequiresInvoice'] ?? false);
+
+        return [
+            'data' => [
+                'message' => 'Task assigned successfully to secretary.',
+                'task' => $task,
+                'assigned_users' => $secretaries->pluck('id'),
+            ],
+            'status' => 200,
+        ];
     }
 }
