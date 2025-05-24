@@ -107,6 +107,11 @@ class AuthService
         ];
     }
 
+    public function getStaff(array $roleIds)
+    {
+        return User::whereIn('role_id', $roleIds)->with(['roles', 'staffInfo'])->get();
+    }
+
     public function logout()
     {
         $this->userRepository->invalidateToken(JWTAuth::getToken());

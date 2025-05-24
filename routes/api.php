@@ -27,6 +27,8 @@ Route::middleware(['auth:api', 'role:SuperAdmin'])->prefix('super-admin')->group
 
     Route::get('showUserInfo/{id}', [AuthController::class, 'showUserInfo']);
 
+    Route::get('getStaff', [AuthController::class, 'getStaff']);
+
     Route::get('showComplaint/{id}', [ComplaintController::class, 'showComplaint']);
 
     Route::get('showAllComplaint', [ComplaintController::class, 'showAllComplaint']);

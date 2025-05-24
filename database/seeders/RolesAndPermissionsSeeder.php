@@ -25,6 +25,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'showUserInfo',
             'registerGuest',
             'LoginSuperAdmin',
+            'getStaff',
             'addFlashcard',
             'editFlashcard',
             'deleteFlashcard',

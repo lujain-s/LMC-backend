@@ -160,6 +160,34 @@ class AuthController extends Controller
         }
     }
 
+    public function getStaff()
+    {
+        try {
+            $users = $this->authService->getStaff([2, 3, 4]);
+
+            $response = $users->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role_id' => $user->role_id,
+                    'Other Info' => $user->staffInfo ? [
+                        'Photo' => $user->staffInfo->Photo,
+                        'Description' => $user->staffInfo->Description,
+                    ] : null
+                ];
+            });
+
+            return response()->json(['users' => $response], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to retrieve users',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function registerGuest(Request $request)
     {
         $validator = Validator::make($request->all(), [
