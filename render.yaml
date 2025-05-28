@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: laravel-api
+    env: php
+    repo: https://github.com/username/your-laravel-project
+    branch: main
+    buildCommand: ""
+    startCommand: ./start.sh
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: your-db-host
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: your-db-name
+      - key: DB_USERNAME
+        value: your-db-username
+      - key: DB_PASSWORD
+        value: your-db-password
