@@ -97,6 +97,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'editMyInfo',
             'removeMyInfo',
             'addHoliday',
+            'viewLessonFlashCards',
+            'viewCourseFlashCards',
+            'assignTaskToSecretary',
+            'viewFlashCardsByLesson',
+            'viewFlashCardsByCourse',
         ];
 
         // Create all permissions

@@ -108,8 +108,7 @@ class StaffService
 
             $conflict = null;
 
-            if ($roomId !== null)
-            {
+            if ($roomId !== null) {
                 $conflict = $this->staffRepository->checkCourseScheduleConflict(
                     $roomId,
                     $data['Start_Date'],
@@ -230,7 +229,7 @@ class StaffService
                 $data['Number_of_lessons']
             );
 
-            if(!empty($data['Photo'])){
+            if (!empty($data['Photo'])) {
                 Course::where('id', $data['CourseId'])->update(['Photo' => $data['Photo']]);
             }
 
@@ -294,6 +293,17 @@ class StaffService
 
             Lesson::insert($lessons);
 
+            // ✅ حذف أيام التسجيل القديمة
+            DB::table('enrollment_days')->where('CourseId', $data['CourseId'])->delete();
+
+            // ✅ توليد أيام تسجيل جديدة
+            $enrollmentDays = $this->generateEnrollmentDays(
+                $data['CourseId'],
+                $data['Start_Enroll'],
+                $data['End_Enroll']
+            );
+            DB::table('enrollment_days')->insert($enrollmentDays);
+
             return [
                 'UpdatedSchedule' => true,
                 'Lessons' => $lessons,
@@ -316,7 +326,9 @@ class StaffService
         $today = Carbon::now()->toDateString();
 
         // Fetch all courses
-        $courses = Course::all();
+        //$courses = Course::all();
+
+        $courses = Course::with(['User', 'Language', 'CourseSchedule'])->get();
 
         $schedules = CourseSchedule::with('Course')->get();
 
@@ -325,7 +337,7 @@ class StaffService
         foreach ($schedules as $schedule) {
             $course = $schedule->course;
 
-            if(!$course) {
+            if (!$course) {
                 continue;
             }
 
@@ -345,21 +357,30 @@ class StaffService
 
     public function viewCourse($courseId)
     {
-        $course = Course::find($courseId);
+        // $course = Course::find($courseId);
+
+        $course = Course::with(['User', 'Language', 'CourseSchedule'])->find($courseId);
+
 
         return $course;
     }
 
     public function viewCourseDetails($courseId)
     {
-        $schedule = CourseSchedule::where('CourseId', $courseId)->first();
+        //$schedule = CourseSchedule::where('CourseId', $courseId)->first();
+
+        $schedule = CourseSchedule::with(['Course.Language', 'Course.User', 'Room'])->where('CourseId', $courseId)->first();
+
 
         return $schedule;
     }
 
     public function getCourseLessons($courseId)
     {
-        return Lesson::where('CourseId', $courseId)->get();
+
+        return Lesson::with('Course.Language', 'Course.User', 'Course.User')->where('CourseId', $courseId)->get();
+
+        //return Lesson::where('CourseId', $courseId)->get();
     }
 
     //Teacher---------------------------------------------------------
@@ -422,7 +443,7 @@ class StaffService
         }
 
         $isOwned = Course::where('id', $flashCard->CourseId)
-        ->where('TeacherId', $teacherId)->exists();
+            ->where('TeacherId', $teacherId)->exists();
 
         return $isOwned ? $flashCard : null;
     }
@@ -463,10 +484,10 @@ class StaffService
         $teacherId = auth()->user()->id;
 
         $lesson = Lesson::where('lessons.id', $lessonId)
-        ->join('courses', 'lessons.CourseId', '=', 'courses.id')
-        ->where('courses.TeacherId', $teacherId)
-        ->select('lessons.*')
-        ->first();
+            ->join('courses', 'lessons.CourseId', '=', 'courses.id')
+            ->where('courses.TeacherId', $teacherId)
+            ->select('lessons.*')
+            ->first();
 
         if (!$lesson) {
             return ['error' => 'Lesson not found or not assigned to you'];
@@ -493,19 +514,19 @@ class StaffService
         $teacherId = auth()->user()->id;
 
         $lesson = Lesson::where('lessons.id', $lessonId)
-        ->join('courses', 'lessons.CourseId', '=', 'courses.id')
-        ->where('courses.TeacherId', $teacherId)
-        ->select('lessons.*')
-        ->first();
+            ->join('courses', 'lessons.CourseId', '=', 'courses.id')
+            ->where('courses.TeacherId', $teacherId)
+            ->select('lessons.*')
+            ->first();
 
         if (!$lesson) {
             return ['error' => 'Lesson not found or not assigned to you'];
         }
 
         $isEnrolled = DB::table('enrollments')
-        ->where('CourseId', $lesson->CourseId)
-        ->where('StudentId', $studentId)
-        ->exists();
+            ->where('CourseId', $lesson->CourseId)
+            ->where('StudentId', $studentId)
+            ->exists();
 
         if (!$isEnrolled) {
             return ['error' => 'Student is not enrolled in this course'];
@@ -544,5 +565,4 @@ class StaffService
             return $this->staffRepository->deleteTest($testId);
         });
     }*/
-
 }
