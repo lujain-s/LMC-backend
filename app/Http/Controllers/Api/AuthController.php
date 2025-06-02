@@ -18,6 +18,7 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
+    //register function
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
