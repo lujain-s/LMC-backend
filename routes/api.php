@@ -212,6 +212,8 @@ Route::middleware(['auth:api' , 'role:Logistic|SuperAdmin|Teacher|Secretarya'])-
 //all users
 Route::get('viewLMCInfo', [StudentController::class, 'viewLMCInfo']);
 
+Route::get('getHoliday', [HolidayController::class, 'getHoliday']);
+
 Route::get("viewCourses", [StaffController::class,"viewCourses"]);
 
 Route::get("viewCourse/{courseId}", [StaffController::class,"viewCourse"]);
@@ -239,4 +241,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('getCourseLessons/{courseId}', [StaffController::class, 'getCourseLessons']);
 
     Route::post('logout', [AuthController::class, 'logout']);
+});
+Route::get('/run-seeder', function () {
+    Artisan::call('db:seed', [
+        '--class' => 'RolesAndPermissionsSeeder'
+    ]);
+
+    return 'Seeder Ran!';
 });
