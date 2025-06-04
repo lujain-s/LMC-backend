@@ -39,7 +39,6 @@ EXPOSE 8000
 
 # نسخ ملفات السكربتات
 COPY start.sh /start.sh
-COPY init.sh /init.sh
 
 # إعطاء صلاحيات التشغيل
 RUN chmod +x /start.sh /init.sh
