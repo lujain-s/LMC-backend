@@ -38,11 +38,6 @@ RUN chown -R www-data:www-data /var/www/storage
 EXPOSE 8000
 
 # نسخ ملفات السكربتات
-COPY start.sh /start.sh
+CMD  php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
 
-# إعطاء صلاحيات التشغيل
-RUN chmod +x /start.sh /init.sh
-
-# عند تشغيل الحاوية، يبدأ التطبيق فقط (بدون seed/migrate)
-CMD ["/start.sh"]
 
