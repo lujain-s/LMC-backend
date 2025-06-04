@@ -1,6 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
-php artisan serve --host=0.0.0.0 --port=8080
+# تشغيل migrate مع تجاهل الفشل (اختياري)
+php artisan migrate --force || true
+
+# تشغيل seeders
+php artisan db:seed --class=RolesAndPermissionsSeeder || true
+php artisan db:seed --class=LMCInfoSeeder || true
+
+# تشغيل السيرفر (يفضل Nginx أو php-fpm في production، وليس artisan serve)
+php-fpm
